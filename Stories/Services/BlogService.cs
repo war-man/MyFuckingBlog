@@ -46,6 +46,12 @@ namespace Stories.Services
             return categories;
         }
 
+        public async Task<Category> GetCategory(string categoryId)
+        {
+            var category = await _unitOfWork.GetRepository<Category>().FindAsync(x => x.Id == categoryId);
+            return category;
+        }
+
         private int CalculateReadMinutes(string content)
         {
             int length = content.Length;

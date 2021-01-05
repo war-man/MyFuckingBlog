@@ -49,8 +49,12 @@ namespace Stories.Controllers
             return Json(post);
         }
 
-        public IActionResult Category()
+        public async Task<IActionResult> Category(string id)
         {
+            var category = await _blogService.GetCategory(id);
+
+            ViewBag.category = category;
+
             return View();
         }
 

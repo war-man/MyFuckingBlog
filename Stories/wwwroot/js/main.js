@@ -1,17 +1,41 @@
-(function($) {
+﻿(function($) {
     'use strict';
 
     // Page loading
     $(window).on('load', function() {
         $('.preloader').delay(450).fadeOut('slow');
+    });
 
-        // Block Somee ads https://stackoverflow.com/questions/18999611/remove-auto-generated-advertisement-script-appended-to-the-results-returned-by-a
+    // Block Somee ads https://stackoverflow.com/questions/18999611/remove-auto-generated-advertisement-script-appended-to-the-results-returned-by-a
+    function blockSomeeAds() {
         $("div[style='opacity: 0.9; z-index: 2147483647; position: fixed; left: 0px; bottom: 0px; height: 65px; right: 0px; display: block; width: 100%; background-color: #202020; margin: 0px; padding: 0px;']").remove();
         $("div[style='margin: 0px; padding: 0px; left: 0px; width: 100%; height: 65px; right: 0px; bottom: 0px; display: block; position: fixed; z-index: 2147483647; opacity: 0.9; background-color: rgb(32, 32, 32);']").remove();
         $("div[onmouseover='S_ssac();']").remove();
         $("center").remove();
         $("div[style='height: 65px;']").remove();
-    });
+    };
+
+    // Load Category
+    function LoadCategories() {
+        $.ajax({
+            url: "/Blog/GetCategories",
+            method: "GET",
+            dataType: "json",
+            success: function (data) {
+                var html = ' <li class="menu-item-has-children"><a href="/"><i class="elegant-icon icon_house_alt mr-5"></i>Trang chủ</a></li>';
+                var html2 = "";
+
+                $(data).each(function (index, cat) {
+                    html += '<li> <a href="/Blog/Category/' + cat.id + '">' + cat.name + '</a> </li>';
+                    html2 += '<li><a href="/Blog/Category/' + cat.id + '" role="menuitem" tabindex="0">' + cat.name + '</a></li>';
+
+                    if (index == 8) return;
+                });
+                $("#desktop-menu").html(html);
+                $(".mobile_menu .slicknav_menu .menu-item-has-children:nth-child(2) ul").html(html2);
+            }
+        });
+    }
 
     // Scroll progress
     var scrollProgress = function() {
@@ -421,6 +445,8 @@
         niceSelectBox();
         moreArticles();
         VSticker();
+        LoadCategories();
+        blockSomeeAds();
     });
 
 })(jQuery);

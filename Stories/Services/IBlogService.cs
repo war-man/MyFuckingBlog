@@ -9,8 +9,9 @@ namespace Stories.Services
 {
     public interface IBlogService
     {
-        public Task<List<Post>> GetPosts();
-        public Task<Post> CreatePost(CreatePostRequest request);
-        public Task<List<Category>> GetCategories();
+        Task<List<Post>> GetPosts();
+        Task<Post> CreatePost(CreatePostRequest request);
+        Task<List<Category>> GetCategories();
+        Task<Category> GetCategory(string categoryId);
     }
 }

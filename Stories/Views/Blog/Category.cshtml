@@ -1,16 +1,17 @@
 ﻿
 @{
-    ViewData["Title"] = "Category";
+    var category = ViewBag.category as Category;
+    ViewData["Title"] = category.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <!--archive header-->
 <div class="archive-header pt-50 text-center">
     <div class="container">
-        <h2 class="font-weight-900">Guides</h2>
+        <h2 class="font-weight-900">@category.Name</h2>
         <div class="breadcrumb">
-            <a href="index.html.htm" rel="nofollow">Home</a>
-            <span></span> Guides
+            <a href="/" rel="nofollow">Trang chủ</a>
+            <span></span> @category.Name
         </div>
         <div class="bt-1 border-color-1 mt-30 mb-50"></div>
     </div>
