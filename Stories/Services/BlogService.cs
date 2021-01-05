@@ -33,6 +33,8 @@ namespace Stories.Services
             var post = new Post();
             post = _mapper.Map<Post>(request);
 
+            post.ReadMinute = CalculateReadMinutes(post.Content);
+
             _unitOfWork.GetRepository<Post>().Add(post);
             await _unitOfWork.CommitAsync();
             return post;
@@ -42,6 +44,12 @@ namespace Stories.Services
         {
             var categories = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
             return categories;
+        }
+
+        private int CalculateReadMinutes(string content)
+        {
+            int length = content.Length;
+            return length/4/250;
         }
     }
 }
