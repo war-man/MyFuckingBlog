@@ -84,7 +84,7 @@
                     var post = {
                         Title: $("#title").val(),
                         Content: $("#content").val(),
-                        AuthorId: "A001",
+                        AuthorId: "@User.Claims.FirstOrDefault(c => c.Type == "Id").Value",
                         CategoryId: $("#category-id").val(),
                         ImageLink: $("#image-link").val(),
                         Tag: $("#tag").val(),

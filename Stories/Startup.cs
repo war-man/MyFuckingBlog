@@ -36,7 +36,11 @@ namespace Stories
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseLazyLoadingProxies().UseNpgsql(sqlConnectionString)).AddUnitOfWork<ApplicationDbContext>();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
+            {
+                options.LoginPath = "/Login";
+                //options.AccessDeniedPath = "/User/Forbidden/";
+            });
 
             services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
 

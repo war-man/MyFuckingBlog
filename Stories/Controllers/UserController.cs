@@ -38,6 +38,7 @@ namespace Stories.Controllers
             {
                 var claims = new List<Claim>
                 {
+                    new Claim("Id", user.Id.ToString()),
                     new Claim("Username", user.Username),
                     new Claim("IsAuthor", user.IsAuthor.ToString()),
                     new Claim("Name", user.Name),

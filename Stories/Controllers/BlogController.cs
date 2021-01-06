@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Stories.Models;
 using Stories.Services;
@@ -29,6 +30,7 @@ namespace Stories.Controllers
             return View(model);
         }
 
+        [Authorize]
         [Route("/CreatePost")]
         public IActionResult CreatePost()
         {
