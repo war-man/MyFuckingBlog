@@ -49,8 +49,8 @@ namespace Stories.Services
                 new Claim("Name", userInfo.Name)
             };
 
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-                _config["Jwt:Issuer"],
+            var token = new JwtSecurityToken(_config["AppSetting:Issuer"],
+                _config["AppSetting:Issuer"],
                 claims,
                 expires: DateTime.Now.AddMinutes(120),
                 signingCredentials: credentials);
