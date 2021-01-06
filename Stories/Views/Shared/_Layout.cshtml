@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -203,8 +206,8 @@
                 </div>
                 <div class="float-right header-tools text-muted font-small">
                     <ul class="header-social-network d-inline-block list-inline mr-15">
-                        <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=kxge.somee.com"><i class="elegant-icon social_facebook"></i></a></li>
-                        <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="https://twitter.com/intent/tweet?url=kxge.somee.com&text=Blog này chất quá mấy bạn!!"><i class="elegant-icon social_twitter "></i></a></li>
+                        <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]"><i class="elegant-icon social_facebook"></i></a></li>
+                        <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="https://twitter.com/intent/tweet?url=@Configuration["AppSetting:HostURL"]&text=Blog này chất quá mấy bạn!!"><i class="elegant-icon social_twitter "></i></a></li>
                         <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
                     </ul>
                     <div class="off-canvas-toggle-cover d-inline-block">
