@@ -515,24 +515,9 @@
                         </div>
                         <div class="instagram-gellay">
                             <ul class="insta-feed">
-                                <li>
-                                    <a href="imgs/thumbnail-3.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="imgs/news/thumb-1.jpg" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="imgs/thumbnail-4.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="imgs/news/thumb-2.jpg" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="imgs/thumbnail-5.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="imgs/news/thumb-3.jpg" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="imgs/thumbnail-3.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="imgs/news/thumb-4.jpg" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="imgs/thumbnail-4.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="imgs/news/thumb-5.jpg" alt=""></a>
-                                </li>
-                                <li>
-                                    <a href="imgs/thumbnail-5.jpg" class="play-video" data-animate="zoomIn" data-duration="1.5s" data-delay="0.1s"><img class="border-radius-5" src="imgs/news/thumb-6.jpg" alt=""></a>
-                                </li>
+
+
+
                             </ul>
                         </div>
                     </div>
@@ -547,6 +532,7 @@
             var PAGENOW = 1;
             var PAGEMAX = $("ul.pagination.justify-content-start li").length - 2;
             LoadLatestPosts(PAGENOW);
+            LoadInstagramPost();
 
             $(".page-link").click(function () {
                 if (!$(this).find("i").length) {
@@ -569,6 +555,45 @@
                 LoadLatestPosts(PAGENOW);
             });
         });
+
+        function LoadInstagramPost() {
+            //var queryId = "17888483320059182";
+            //var userId = "1951415043";
+
+            //$.ajax({
+            //    url: 'https://instagram.com/graphql/query/?query_id=' + queryId + '&variables={"id":"' + userId + '","first":20,"after":null}',
+            //    method: "GET",
+            //    dataType: "json",
+            //    cache: false,
+            //    success: function (data) {
+            //        var node = data.data.user.edge_owner_to_timeline_media.edges;
+
+            //        $(node).each(function (i, n) {
+            //            console.log(n.display_url);
+            //        });
+            //    },
+            //    error: function (data) {
+            //        console.log(data);
+            //    }
+            //});
+
+            var name = "uyeenphuonggg";
+            $.get("https://images" + ~~(Math.random() * 3333) + "-focus-opensocial.googleusercontent.com/gadgets/proxy?container=none&url=https://www.instagram.com/" + name + "/", function (html) {
+                if (html) {
+                    var regex = /_sharedData = ({.*);<\/script>/m;
+                    json = JSON.parse(regex.exec(html)[1]);
+                    edges = json.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges;
+                    var html = "";
+
+                    $.each(edges, function (n, edge) {
+                        var node = edge.node;
+                        html += '<li><a><img class="border-radius-5" src="' + node.display_url + '" alt=""></a></li>';
+                    });
+
+                    $(".insta-feed").html(html);
+                }
+            });
+        }
 
         function LoadLatestPosts(PAGENOW) {
             $.ajax({
