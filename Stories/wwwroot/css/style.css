@@ -53,7 +53,7 @@ TABLE CONTENT
 	font-family: 'Crimson Text', serif;
 	font-family: 'Noto Sans JP', sans-serif;
 */
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Commissioner&family=Kanit&display=swap');
 
 :root {
 	--color-mode: "light";
@@ -215,7 +215,7 @@ button.bg-primary:hover {
 
 /* GENERAL */
 body {
-	font-family: 'Noto Sans JP',sans-serif;
+	font-family: 'Commissioner', sans-serif;
 	font-weight: normal;
 	font-style: normal;
 	font-size: 14px;
@@ -233,7 +233,7 @@ h6,
 	font-style: normal;
 	font-weight: 500;
 	text-transform: none;
-	font-family: 'Noto Sans JP',sans-serif;
+	font-family: 'Kanit', sans-serif;
 }
 
 p {

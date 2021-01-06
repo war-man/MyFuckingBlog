@@ -14,6 +14,5 @@ namespace Stories.VM.Request
         public string ImageLink { get; set; }
         public string Tag { get; set; }
         public string Type { get; set; }
-        public string Link { get; set; }
     }
 }

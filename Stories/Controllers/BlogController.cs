@@ -35,20 +35,6 @@ namespace Stories.Controllers
             return View();
         }
 
-        [HttpPost("/{controller}/CreatePost")]
-        public async Task<JsonResult> CreatePost(CreatePostRequest request)
-        {
-            var post = await _blogService.CreatePost(request);
-            return Json(post);
-        }
-
-        [HttpGet("/{controller}/GetCategories")]
-        public async Task<JsonResult> GetCategories()
-        {
-            var post = await _blogService.GetCategories();
-            return Json(post);
-        }
-
         public async Task<IActionResult> Category(string id)
         {
             var category = await _blogService.GetCategory(id);
@@ -58,24 +44,12 @@ namespace Stories.Controllers
             return View();
         }
 
-        public IActionResult Single()
+        public IActionResult Single(string link)
         {
             return View();
         }
 
         public IActionResult Search()
-        {
-            return View();
-        }
-
-        [Route("/LogIn")]
-        public IActionResult LogIn()
-        {
-            return View();
-        }
-
-        [Route("/Register")]
-        public IActionResult Register()
         {
             return View();
         }
@@ -92,16 +66,33 @@ namespace Stories.Controllers
             return View();
         }
 
-        [Route("/Author")]
-        public IActionResult Author()
-        {
-            return View();
-        }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        #region API
+        [HttpPost("/{controller}/CreatePost")]
+        public async Task<JsonResult> CreatePost(CreatePostRequest request)
+        {
+            var post = await _blogService.CreatePost(request);
+            return Json(post);
+        }
+
+        [HttpGet("/{controller}/GetCategories")]
+        public async Task<JsonResult> GetCategories()
+        {
+            var post = await _blogService.GetCategories();
+            return Json(post);
+        }
+
+        [HttpGet("/{controller}/GetLatestPosts")]
+        public async Task<JsonResult> GetLatestPosts(int pageNumber)
+        {
+            var post = await _blogService.GetLatestPosts(pageNumber);
+            return Json(post);
+        }
+        #endregion
     }
 }

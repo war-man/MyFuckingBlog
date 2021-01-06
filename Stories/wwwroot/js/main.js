@@ -24,15 +24,30 @@
             success: function (data) {
                 var html = ' <li class="menu-item-has-children"><a href="/"><i class="elegant-icon icon_house_alt mr-5"></i>Trang chủ</a></li>';
                 var html2 = "";
+                var footer = "";
 
                 $(data).each(function (index, cat) {
-                    html += '<li> <a href="/Blog/Category/' + cat.id + '">' + cat.name + '</a> </li>';
+                    html += '<li><a href="/Blog/Category/' + cat.id + '">' + cat.name + '</a></li>';
                     html2 += '<li><a href="/Blog/Category/' + cat.id + '" role="menuitem" tabindex="0">' + cat.name + '</a></li>';
+                    footer += '<div class="carausel-3-columns-item d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5">'
+                           + '<div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">'
+                           +         '<a class="color-white" href="/Blog/Category/' + cat.id + '">'
+                           +             '<img src="' + cat.thumbLink + '" alt="">'
+                           +         '</a>'
+                           +     '</div>'
+                           +     '<div class="post-content media-body">'
+                           +         '<h6><a href="/Blog/Category/' + cat.id + '">' + cat.name + '</a></h6>'
+                           +         '<p class="text-muted font-small">' + cat.description + '</p>'
+                           +     '</div>'
+                           + '</div>';
 
                     if (index == 8) return;
                 });
+
                 $("#desktop-menu").html(html);
                 $(".mobile_menu .slicknav_menu .menu-item-has-children:nth-child(2) ul").html(html2);
+                $("#categoriesFooter").html(footer);
+                customSlickSlider();
             }
         });
     }
@@ -171,6 +186,7 @@
             fade: true,
             asNavFor: '.featured-slider-2-nav',
         });
+
         $('.featured-slider-2-nav').slick({
             slidesToShow: 3,
             slidesToScroll: 1,
@@ -181,6 +197,7 @@
             focusOnSelect: true,
             verticalSwiping: true
         });
+
         // featured slider 3
         $('.featured-slider-3-items').slick({
             slidesToShow: 1,
@@ -435,7 +452,6 @@
         scrollToTop();
         headerSticky();
         stickySidebar();
-        customSlickSlider();
         megaMenu();
         mobileMenu();
         typeWriter();

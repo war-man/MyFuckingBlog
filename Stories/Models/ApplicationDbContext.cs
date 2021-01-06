@@ -7,7 +7,7 @@ namespace Stories.Models
     {
         #region  Model 
         public virtual DbSet<Post> Posts { get; set; }
-        public virtual DbSet<Author> Authors { get; set; }
+        public virtual DbSet<User> Authors { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         #endregion
 

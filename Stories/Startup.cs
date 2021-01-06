@@ -1,6 +1,8 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -34,8 +36,13 @@ namespace Stories
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseLazyLoadingProxies().UseNpgsql(sqlConnectionString)).AddUnitOfWork<ApplicationDbContext>();
 
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+
+            services.AddAntiforgery(options => options.HeaderName = "RequestVerificationToken");
+
             // Services
             services.AddTransient<IBlogService, BlogService>();
+            services.AddTransient<IUserService, UserService>();
 
             // Automapper
             var mappingConfig = new MapperConfiguration(mc =>
@@ -65,7 +72,15 @@ namespace Stories
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
+
+            var cookiePolicyOptions = new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+            };
+
+            app.UseCookiePolicy(cookiePolicyOptions);
 
             app.UseEndpoints(endpoints =>
             {

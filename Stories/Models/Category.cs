@@ -14,5 +14,9 @@ namespace Stories.Models
 
         [Column("name")]
         public string Name { get; set; }
+        [Column("description")]
+        public string Description { get; set; }
+        [Column("thumb_link")]
+        public string ThumbLink { get; set; }
     }
 }
