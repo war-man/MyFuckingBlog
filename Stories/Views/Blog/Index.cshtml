@@ -2,25 +2,9 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="featured-1">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-6 align-self-center">
-                <p class="text-muted"><span class="typewrite d-inline" data-period="2000" data-type='[ " Travel Blogger. ", "Content Writter. ", "Food Guides " ]'></span></p>
-                <h2>Hello, I’m <span>Steven</span></h2>
-                <h3 class="mb-20"> Welcome to my blog</h3>
-                <h5 class="text-muted">Don't miss out on the latest news about Travel tips, Hotels review, Food guide...</h5>
-                <form class="input-group form-subcriber mt-30 d-flex">
-                    <input type="email" class="form-control bg-white font-small" placeholder="Enter your email">
-                    <button class="btn bg-primary text-white" type="submit">Subscribe</button>
-                </form>
-            </div>
-            <div class="col-lg-6 text-right d-none d-lg-block">
-                <img src="imgs/authors/featured.png" alt="">
-            </div>
-        </div>
-    </div>
-</div>
+@{
+    await Html.RenderPartialAsync("_Featured3");
+}
 <div class="container">
     <div class="hot-tags pt-30 pb-30 font-small align-self-center">
         <div class="widget-header-3">
@@ -31,10 +15,10 @@
                 <div class="col-md-8 text-md-right font-small align-self-center">
                     <p class="d-inline-block mr-5 mb-0"><i class="elegant-icon  icon_tag_alt mr-5 text-muted"></i>Hot tags:</p>
                     <ul class="list-inline d-inline-block tags">
-                        <li class="list-inline-item"><a href="#"># Covid-19</a></li>
-                        <li class="list-inline-item"><a href="#"># Inspiration</a></li>
-                        <li class="list-inline-item"><a href="#"># Work online</a></li>
-                        <li class="list-inline-item"><a href="#"># Stay home</a></li>
+                        <li class="list-inline-item"><a href="#">#Covid-19</a></li>
+                        <li class="list-inline-item"><a href="#">#Inspiration</a></li>
+                        <li class="list-inline-item"><a href="#">#WorkOnline</a></li>
+                        <li class="list-inline-item"><a href="#">#StayHome</a></li>
                     </ul>
                 </div>
             </div>
@@ -515,9 +499,6 @@
                         </div>
                         <div class="instagram-gellay">
                             <ul class="insta-feed">
-
-
-
                             </ul>
                         </div>
                     </div>
@@ -590,7 +571,7 @@
                         html += '<li><a><img class="border-radius-5" src="' + node.display_url + '" alt=""></a></li>';
                     });
 
-                    $(".insta-feed").html(html);
+                    $(".insta-feed").hide().html(html).fadeIn('slow');
                 }
             });
         }
