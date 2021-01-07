@@ -80,6 +80,7 @@ namespace Stories.Controllers
         [Route("/404")]
         public IActionResult PageNotFound()
         {
+            //https://www.infoworld.com/article/3545304/how-to-handle-404-errors-in-aspnet-core-mvc.html
             string originalPath = "unknown";
             if (HttpContext.Items.ContainsKey("originalPath"))
             {
