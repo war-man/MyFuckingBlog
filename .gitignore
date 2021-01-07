@@ -35,3 +35,6 @@ msbuild.wrn
 
 # Visual Studio 2015
 .vs/
+Stories/Properties/PublishProfiles/FolderProfile.pubxml
+Stories/.config/dotnet-tools.json
+Stories/Stories.csproj
