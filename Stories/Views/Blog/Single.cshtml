@@ -1,23 +1,22 @@
-﻿
+﻿@model Stories.VM.BlogSingleViewModel
 @{
-    ViewData["Title"] = "Single";
+    ViewData["Title"] = Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
+    string[] monthString = { "giêng", "hai", "ba", "tư", "năm", "sáu", "bảy", "tám", "chín", "mười", "mười một", "mười hai" };
 }
 
 <div class="container single-content">
     <div class="entry-header entry-header-style-1 mb-50 pt-50">
-        <h1 class="entry-title mb-50 font-weight-900">
-            The effect of livestock on the physiological condition of roe deer is modulated by habitat quality
-        </h1>
+        <h1 class="entry-title mb-50 font-weight-900">@Model.Title</h1>
         <div class="row">
             <div class="col-md-6">
                 <div class="entry-meta align-items-center meta-2 font-small color-muted">
                     <p class="mb-5">
-                        <a class="author-avatar" href="#"><img class="img-circle" src="/imgs/authors/author-3.jpg" alt=""></a>
-                        By <a href="author.html"><span class="author-name font-weight-bold">Barbara Cartland</span></a>
+                        <a class="author-avatar" href="/Author/@Model.AuthorUsername"><img class="img-circle" src="@Model.AuthorAvatar" alt=""></a>
+                        Bởi <a href="/Author/@Model.AuthorUsername"><span class="author-name font-weight-bold">@Model.AuthorName</span></a>
                     </p>
-                    <span class="mr-10"> 15 April 2020</span>
-                    <span class="has-dot"> 8 mins read</span>
+                    <span class="mr-10"> @Model.CreatedDate.ToString("dd-MM/yyyy").Replace("-", " tháng ").Replace("/", " năm ")</span>
+                    <span class="has-dot"> @Model.ReadMinute phút đọc</span>
                 </div>
             </div>
             <div class="col-md-6 text-right d-none d-md-inline">
@@ -32,7 +31,7 @@
     </div>
     <!--end single header-->
     <figure class="image mb-30 m-auto text-center border-radius-10">
-        <img class="border-radius-10" src="/imgs/news/news-1.jpg" alt="post-title">
+        <img class="border-radius-10" src="@Model.ImageLink" alt="post-title">
     </figure>
     <!--figure-->
     <article class="entry-wraper mb-50">
@@ -96,9 +95,10 @@
         <div class="entry-bottom mt-50 mb-30 wow fadeIn animated">
             <div class="tags">
                 <span>Tags: </span>
-                <a href="category.html.htm" rel="tag">deer</a>
-                <a href="category.html.htm" rel="tag">nature</a>
-                <a href="category.html.htm" rel="tag">conserve</a>
+                @foreach (var tag in Model.Tag.Split(" "))
+                {
+                    <a href="/Search" rel="tag">@tag</a>
+                }
             </div>
         </div>
         <div class="single-social-share clearfix wow fadeIn animated">
@@ -117,15 +117,15 @@
         <!--author box-->
         <div class="author-bio p-30 mt-50 border-radius-10 bg-white wow fadeIn animated">
             <div class="author-image mb-30">
-                <a href="author.html"><img src="/imgs/authors/author-3.jpg" alt="" class="avatar"></a>
+                <a href="/Author/@Model.AuthorUsername"><img src="@Model.AuthorAvatar" alt="" class="avatar"></a>
             </div>
             <div class="author-info">
                 <h4 class="font-weight-bold mb-20">
-                    <span class="vcard author"><span class="fn"><a href="author.html" title="Posted by Barbara Cartland" rel="author">Barbara Cartland</a></span></span>
+                    <span class="vcard author"><span class="fn"><a href="/Author/@Model.AuthorUsername" title="Posted by @Model.AuthorName" rel="author">@Model.AuthorName</a></span></span>
                 </h4>
-                <h5 class="text-muted">About author</h5>
-                <div class="author-description text-muted">You should write because you love the shape of stories and sentences and the creation of different words on a page. </div>
-                <a href="author.html" class="author-bio-link mb-md-0 mb-3">View all posts (125)</a>
+                <h5 class="text-muted">Về tác giả</h5>
+                <div class="author-description text-muted">@Model.AuthorDescription</div>
+                <a href="/Author/@Model.AuthorUsername" class="author-bio-link mb-md-0 mb-3">Xem tất cả bài viết (125)</a>
                 <div class="author-social">
                     <ul class="author-social-icons">
                         <li class="author-social-link-facebook"><a href="#" target="_blank"><i class="ti-facebook"></i></a></li>
@@ -214,43 +214,30 @@
         <!--More posts-->
         <div class="single-more-articles border-radius-5">
             <div class="widget-header-2 position-relative mb-30">
-                <h5 class="mt-5 mb-30">You might be interested in</h5>
+                <h5 class="mt-5 mb-30">Có thể bạn sẽ thích</h5>
                 <button class="single-more-articles-close"><i class="elegant-icon icon_close"></i></button>
             </div>
             <div class="post-block-list post-module-1 post-module-5">
                 <ul class="list-post">
-                    <li class="mb-30">
-                        <div class="d-flex hover-up-2 transition-normal">
-                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
-                                <a class="color-white" href="single.html.htm">
-                                    <img src="/imgs/news/thumb-1.jpg" alt="">
-                                </a>
-                            </div>
-                            <div class="post-content media-body">
-                                <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="single.html.htm">The Best Time to Travel to Cambodia</a></h6>
-                                <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
-                                    <span class="post-on">27 Jan</span>
-                                    <span class="post-by has-dot">13k views</span>
+                    @foreach (var post in Model.MorePosts)
+                    {
+                        <li class="mb-30">
+                            <div class="d-flex hover-up-2 transition-normal">
+                                <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                    <a class="color-white" href="/Blog/Single/@post.Link">
+                                        <img src="@post.ImageLink" alt="">
+                                    </a>
+                                </div>
+                                <div class="post-content media-body">
+                                    <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="/Blog/Single/@post.Link">@post.Title</a></h6>
+                                    <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
+                                        <span class="post-on">@post.CreatedDate.Day tháng @monthString[post.CreatedDate.Month - 1]</span>
+                                        <span class="post-by has-dot">@post.ReadMinute phút đọc</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </li>
-                    <li class="mb-10">
-                        <div class="d-flex hover-up-2 transition-normal">
-                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
-                                <a class="color-white" href="single.html.htm">
-                                    <img src="/imgs/news/thumb-2.jpg" alt="">
-                                </a>
-                            </div>
-                            <div class="post-content media-body">
-                                <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="single.html.htm">20 Photos to Inspire You to Visit Cambodia</a></h6>
-                                <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
-                                    <span class="post-on">27 August</span>
-                                    <span class="post-by has-dot">14k views</span>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>

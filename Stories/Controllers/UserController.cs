@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Stories.Services;
 using Stories.VM.Request;
@@ -40,8 +41,9 @@ namespace Stories.Controllers
                 {
                     new Claim("Id", user.Id.ToString()),
                     new Claim("Username", user.Username),
-                    new Claim("IsAuthor", user.IsAuthor.ToString()),
                     new Claim("Name", user.Name),
+                    new Claim("IsAuthor", user.IsAuthor ? "true" : "false"),
+                    new Claim(ClaimTypes.Role, user.IsAuthor ? "Admin" : "User")
                 };
 
                 var claimsIdentity = new ClaimsIdentity(
@@ -79,6 +81,13 @@ namespace Stories.Controllers
 
         [Route("/Author/{username}")]
         public IActionResult Author(string username)
+        {
+            return View();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [Route("/PageSetting")]
+        public IActionResult PageSetting()
         {
             return View();
         }

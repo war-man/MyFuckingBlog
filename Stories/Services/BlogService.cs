@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Stories.Models;
+using Stories.VM;
 using Stories.VM.Request;
 using Stories.VM.Response;
 using System;
@@ -16,6 +17,7 @@ namespace Stories.Services
     public interface IBlogService
     {
         Task<List<Post>> GetPosts();
+        Task<BlogSingleViewModel> GetPost(string link);
         Task<List<PostResponse>> GetLatestPosts(int pageNumber);
         Task<Post> CreatePost(CreatePostRequest request);
         Task<List<Category>> GetCategories();
@@ -38,6 +40,22 @@ namespace Stories.Services
         {
             var posts = await _unitOfWork.GetRepository<Post>().GetAll().ToListAsync();
             return posts;
+        }
+
+        public async Task<BlogSingleViewModel> GetPost(string link)
+        {
+            var post = await _unitOfWork.GetRepository<Post>().FindAsync(x => x.Link == link);
+            var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Id == post.AuthorId);
+            var morePosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToListAsync();
+
+            var vm = _mapper.Map<BlogSingleViewModel>(post);
+            vm.AuthorName = user.Name;
+            vm.AuthorUsername = user.Username;
+            vm.AuthorAvatar = user.Avatar;
+            vm.AuthorDescription = user.Description;
+            vm.MorePosts = morePosts;
+
+            return vm;
         }
 
         public async Task<List<PostResponse>> GetLatestPosts(int pageNumber)

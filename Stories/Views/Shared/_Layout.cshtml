@@ -166,6 +166,11 @@
                                         <a href="#"><i class="elegant-icon icon_profile mr-5"></i>@User.Claims.FirstOrDefault(c => c.Type == "Name").Value</a>
                                         <ul class="sub-menu font-small">
                                             <li><a href="/Author/@User.Claims.FirstOrDefault(c => c.Type == "Username").Value">Trang cá nhân</a></li>
+                                            @if (User.Claims.FirstOrDefault(c => c.Type == "IsAuthor").Value == "true")
+                                            {
+                                                <li><a href="/CreatePost">Tạo bài viết</a></li>
+                                                <li><a href="/PageSetting">Cài đặt blog</a></li>
+                                            }
                                             <li><a asp-action="LogOut" asp-controller="User">Đăng xuất</a></li>
                                         </ul>
                                     </li>

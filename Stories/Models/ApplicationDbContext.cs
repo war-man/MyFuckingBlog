@@ -9,6 +9,7 @@ namespace Stories.Models
         public virtual DbSet<Post> Posts { get; set; }
         public virtual DbSet<User> Authors { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
         #endregion
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)

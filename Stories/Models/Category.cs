@@ -11,7 +11,6 @@ namespace Stories.Models
     {
         [Column("id")]
         public string Id { get; set; }
-
         [Column("name")]
         public string Name { get; set; }
         [Column("description")]

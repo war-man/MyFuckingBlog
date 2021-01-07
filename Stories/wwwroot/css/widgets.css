@@ -325,6 +325,7 @@ figure .post-format {
 .post-thumb-80 img {
     width: 90px;
     height: 80px;
+    object-fit: cover;
 }
 
 .post-thumb-64 img {

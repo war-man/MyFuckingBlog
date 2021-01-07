@@ -17,6 +17,10 @@ namespace Stories.Models
         public string Password { get; set; }
         [Column("name")]
         public string Name { get; set; }
+        [Column("avatar")]
+        public string Avatar { get; set; }
+        [Column("description")]
+        public string Description { get; set; }
         [Column("is_author")]
         public bool IsAuthor { get; set; }
     }

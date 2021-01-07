@@ -19,7 +19,7 @@ namespace Stories.Models
         public string Content { get; set; }
 
         [Column("author_id")]
-        public string AuthorId { get; set; }
+        public Guid AuthorId { get; set; }
 
         [Column("category_id")]
         public string CategoryId { get; set; }

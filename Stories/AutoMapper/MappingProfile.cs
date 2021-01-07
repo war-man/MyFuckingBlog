@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Stories.Models;
+using Stories.VM;
 using Stories.VM.Request;
 using Stories.VM.Response;
 using System;
@@ -15,6 +16,7 @@ namespace Stories.AutoMapper
         {
             CreateMap<CreatePostRequest, Post>();
             CreateMap<Post, PostResponse>();
+            CreateMap<Post, BlogSingleViewModel>();
         }
     }
 }

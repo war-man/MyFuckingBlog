@@ -30,7 +30,7 @@ namespace Stories.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("/CreatePost")]
         public IActionResult CreatePost()
         {
@@ -46,12 +46,15 @@ namespace Stories.Controllers
             return View();
         }
 
-        public IActionResult Single(string link)
+        [Route("/{controller}/Single/{link}")]
+        public async Task<IActionResult> Single(string link)
         {
-            return View();
+            var post = await _blogService.GetPost(link);
+            return View(post);
         }
 
-        public IActionResult Search()
+        [HttpGet]
+        public IActionResult Search(string keyword)
         {
             return View();
         }
@@ -72,6 +75,17 @@ namespace Stories.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [Route("/404")]
+        public IActionResult PageNotFound()
+        {
+            string originalPath = "unknown";
+            if (HttpContext.Items.ContainsKey("originalPath"))
+            {
+                originalPath = HttpContext.Items["originalPath"] as string;
+            }
+            return View();
         }
 
         #region API
