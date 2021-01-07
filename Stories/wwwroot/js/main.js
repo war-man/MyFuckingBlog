@@ -444,7 +444,9 @@
     new WOW().init();
 
     //Load functions
-    $(document).ready(function() {
+    $(document).ready(function () {
+        $('meta[property="og:url"]').attr('content', window.location.href);
+
         openSearchForm();
         OffCanvas();
         customScrollbar();
@@ -462,7 +464,7 @@
         moreArticles();
         VSticker();
         LoadCategories();
-        blockSomeeAds();
+        setTimeout(function () { blockSomeeAds(); }, 1000);
     });
 
 })(jQuery);
