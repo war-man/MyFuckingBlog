@@ -9,11 +9,15 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
 
     <!-- Facebook meta tags  -->
+    <meta property="fb:app_id" content="449245312768740" />
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="@Configuration["AppSetting:HostURL"]">
-    <meta property="og:url" content="@Configuration["AppSetting:HostURL"]" />
-    <meta property="og:description" content="Úi xồi quả blog chill nhất Vịnh Bắc Bộ là đây chứ đâu!?" />
-    <meta property="og:image" content="/imgs/news/thumb-10.jpg" />
+    @RenderSection("meta", required: false)
+    @if (!IsSectionDefined("meta")) {
+        <meta property="og:url" content="@Configuration["AppSetting:HostURL"]" />
+        <meta property="og:description" content="Úi xồi quả blog chill nhất Vịnh Bắc Bộ là đây chứ đâu!?" />
+        <meta property="og:image" content="/imgs/news/thumb-10.jpg" />
+    }
     <meta name="author" content="Lê Võ Thành Tâm" />
 
     <title>@ViewData["Title"] | Stories</title>

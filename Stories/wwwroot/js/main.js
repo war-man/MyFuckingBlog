@@ -445,8 +445,6 @@
 
     //Load functions
     $(document).ready(function () {
-        $('meta[property="og:url"]').attr('content', window.location.href);
-
         openSearchForm();
         OffCanvas();
         customScrollbar();

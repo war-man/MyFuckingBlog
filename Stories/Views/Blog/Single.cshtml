@@ -1,10 +1,21 @@
 ﻿@model Stories.VM.BlogSingleViewModel
 @using System.Text.RegularExpressions;
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
 @{
     ViewData["Title"] = Model.Title;
     Layout = "~/Views/Shared/_Layout.cshtml";
     string[] monthString = { "giêng", "hai", "ba", "tư", "năm", "sáu", "bảy", "tám", "chín", "mười", "mười một", "mười hai" };
-    var content = Html.Raw(Regex.Replace(Model.Content.Replace("'", "\"").Replace("\n", " "), @"\s+", " "));
+    var tmp_content = Regex.Replace(Model.Content.Replace("\"", "'").Replace("\n", " "), @"\s+", " ");
+    tmp_content = tmp_content.Length > 150 ? (tmp_content.Substring(0, Math.Min(tmp_content.Length, 147)) + "...") : tmp_content;
+    var content = Html.Raw(tmp_content);
+}
+
+@section meta {
+    <meta property="og:url" content="@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link" />
+    <meta property="og:description" content="@content" />
+    <meta property="og:image" content="@Model.ImageLink" />
 }
 
 <div class="container single-content">
@@ -99,7 +110,7 @@
                 <span>Tags: </span>
                 @foreach (var tag in Model.Tag.Split(" "))
                 {
-                    <a href="/Search" rel="tag">@tag</a>
+                <a href="/Search" rel="tag">@tag</a>
                 }
             </div>
         </div>
@@ -223,22 +234,22 @@
                 <ul class="list-post">
                     @foreach (var post in Model.MorePosts)
                     {
-                        <li class="mb-30">
-                            <div class="d-flex hover-up-2 transition-normal">
-                                <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
-                                    <a class="color-white" href="/Blog/Single/@post.Link">
-                                        <img src="@post.ImageLink" alt="">
-                                    </a>
-                                </div>
-                                <div class="post-content media-body">
-                                    <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="/Blog/Single/@post.Link">@post.Title</a></h6>
-                                    <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
-                                        <span class="post-on">@post.CreatedDate.Day tháng @monthString[post.CreatedDate.Month - 1]</span>
-                                        <span class="post-by has-dot">@post.ReadMinute phút đọc</span>
-                                    </div>
+                    <li class="mb-30">
+                        <div class="d-flex hover-up-2 transition-normal">
+                            <div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
+                                <a class="color-white" href="/Blog/Single/@post.Link">
+                                    <img src="@post.ImageLink" alt="">
+                                </a>
+                            </div>
+                            <div class="post-content media-body">
+                                <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="/Blog/Single/@post.Link">@post.Title</a></h6>
+                                <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
+                                    <span class="post-on">@post.CreatedDate.Day tháng @monthString[post.CreatedDate.Month - 1]</span>
+                                    <span class="post-by has-dot">@post.ReadMinute phút đọc</span>
                                 </div>
                             </div>
-                        </li>
+                        </div>
+                    </li>
                     }
                 </ul>
             </div>
@@ -383,18 +394,3 @@
     </article>
 </div>
 <!--container-->
-
-@section Scripts {
-    <script>
-        $(document).ready(function () {
-            var des = '@content';
-
-            if (des.length > 150) {
-                des = des.substr(0, des.lastIndexOf(' ', 147)) + '...';
-            }
-
-            $("meta[property='og:description']").attr('content', des);
-            $("meta[property='og:image']").attr('content', '@Model.ImageLink');
-        });
-    </script>
-}
