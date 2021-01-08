@@ -9,9 +9,9 @@
         <div class="col-lg-6 col-md-12 d-lg-block d-none pr-50"><img src="/imgs/theme/page-not-found.png" alt=""></div>
         <div class="col-lg-6 col-md-12 pl-50 text-md-center text-lg-left">
             <h1 class="mb-30 font-weight-900 page-404">404</h1>
-            <form action="#" method="get" class="search-form d-lg-flex open-search mb-30">
+            <form asp-controller="Blog" asp-action="Search" method="get" class="search-form d-lg-flex open-search mb-30">
                 <i class="icon-search"></i>
-                <input class="form-control" name="name" id="name" type="text" placeholder="Tìm kiếm...">
+                <input class="form-control" name="keyword" id="keyword" type="text" placeholder="Tìm kiếm...">
             </form>
             <p class="">
                 Đường dẫn bạn đang yêu cầu đã bị xóa hoặc thay đổi.<br> Hãy ghé thăm <a href="/">Trang chủ</a> hoặc <a href="/Contact">Liên hệ chúng tôi</a> về vấn đề này
