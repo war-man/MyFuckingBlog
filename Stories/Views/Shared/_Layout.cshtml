@@ -13,7 +13,8 @@
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="@Configuration["AppSetting:HostURL"]">
     @RenderSection("meta", required: false)
-    @if (!IsSectionDefined("meta")) {
+    @if (!IsSectionDefined("meta"))
+    {
         <meta property="og:url" content="@Configuration["AppSetting:HostURL"]" />
         <meta property="og:description" content="Úi xồi quả blog chill nhất Vịnh Bắc Bộ là đây chứ đâu!?" />
         <meta property="og:image" content="/imgs/news/thumb-10.jpg" />
@@ -128,7 +129,7 @@
             <div class="container">
                 <div class="row pt-20 pb-20">
                     <div class="col-md-3 col-xs-6">
-                        <a href="/"><img class="logo" src="~/imgs/theme/logo.png" alt=""></a>
+                        <a href="/"><img class="logo" src="~/imgs/theme/logo2.png" alt=""></a>
                     </div>
                     <div class="col-md-9 col-xs-6 text-right header-top-right ">
                         <ul class="list-inline nav-topbar d-none d-md-inline">
@@ -664,6 +665,7 @@
     <script src="~/js/vendor/perfect-scrollbar.js"></script>
     <script src="~/js/vendor/waypoints.min.js"></script>
     <script src="~/js/vendor/jquery.theia.sticky.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js"></script>
     <!-- NewsBoard JS -->
     <script src="~/js/main.js"></script>
     @RenderSection("Scripts", required: false)

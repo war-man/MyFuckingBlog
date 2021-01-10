@@ -1,6 +1,8 @@
-﻿
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Đăng ký";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -10,32 +12,35 @@
             <div class="login_wrap widget-taber-content p-30 bg-white border-radius-10">
                 <div class="padding_eight_all bg-white">
                     <div class="heading_s1 text-center">
-                        <h3 class="mb-30 font-weight-900">Create an account</h3>
+                        <h3 class="mb-30 font-weight-900">Tạo tài khoản mới</h3>
                     </div>
                     <form method="post">
                         <div class="form-group">
-                            <input type="text" required="" class="form-control" name="username" placeholder="Username">
+                            <input type="text" required="" class="form-control" name="username" placeholder="Tên tài khoản">
                         </div>
                         <div class="form-group">
                             <input type="text" required="" class="form-control" name="email" placeholder="Email">
                         </div>
                         <div class="form-group">
-                            <input class="form-control" required="" type="password" name="password" placeholder="Password">
+                            <input class="form-control" required="" type="password" name="password" placeholder="Mật khẩu">
                         </div>
                         <div class="form-group">
-                            <input class="form-control" required="" type="password" name="password" placeholder="Confirm password">
+                            <input class="form-control" required="" type="password" name="password" placeholder="Xác nhận mật khẩu">
+                        </div>
+                        <div class="text-xs-center">
+                            <div class="g-recaptcha" data-sitekey="@Configuration["AppSetting:ReCaptchaSiteKey"]"></div>
                         </div>
                         <div class="login_footer form-group">
                             <div class="chek-form">
                                 <div class="custome-checkbox">
                                     <input class="form-check-input" type="checkbox" name="checkbox" id="exampleCheckbox1" value="">
-                                    <label class="form-check-label" for="exampleCheckbox1"><span>I agree to terms &amp; Policy.</span></label>
+                                    <label class="form-check-label" for="exampleCheckbox1"><span>Đồng ý với các Điều khoản &amp; Dịch vụ.</span></label>
                                 </div>
                             </div>
-                            <a class="text-muted" href="#">Lean more</a>
+                            <a class="text-muted" href="#">Tìm hiểu thêm</a>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="button button-contactForm btn-block">Submit &amp; Register</button>
+                            <button type="submit" class="button button-contactForm btn-block">Đăng ký</button>
                         </div>
                     </form>
                     <div class="divider-text-center mt-15 mb-15">
@@ -45,17 +50,56 @@
                         <li><a href="#" class="btn btn-facebook"><i class="elegant-icon social_facebook  mr-5"></i>Facebook</a></li>
                         <li><a href="#" class="btn btn-google"><i class="elegant-icon social_googleplus mr-5"></i>Google</a></li>
                     </ul>
-                    <div class="text-muted text-center">Already have an account? <a href="page-login.html.htm">Sign up now</a></div>
+                    <div class="text-muted text-center">Đã có tài khoản? <a href="/Login">Đăng nhập ngay</a></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 @section Scripts {
     <script>
         $(document).ready(function () {
             $("main").addClass("bg-grey pt-80 pb-50");
             $("footer").toggleClass("bg-grey");
+
+
+            $("form").submit(function (e) {
+                e.preventDefault();
+
+                if (grecaptcha.getResponse() == "") {
+                    alert("You can't proceed!");
+                }
+                else {
+                    //var request = {
+                    //    Username: $('[name="username"]').val(),
+                    //    Password: $('[name="password"]').val(),
+                    //    Email: $('[name="email"]').val()
+                    //};
+
+                    //$.ajax({
+                    //    url: "/User/RegisterAccount",
+                    //    method: "post",
+                    //    dataType: "json",
+                    //    data: {
+                    //        request: request
+                    //    },
+                    //    success: function (data) {
+                    //        console.log(data);
+                    //    }
+                    //});
+                }
+            });
         });
     </script>
 }
+
+<style>
+    .text-xs-center {
+        text-align: center;
+    }
+
+    .g-recaptcha {
+        display: inline-block;
+    }
+</style>

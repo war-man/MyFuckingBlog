@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Stories.Services;
 using Stories.VM.Request;
 using System;
@@ -15,9 +17,12 @@ namespace Stories.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private IConfiguration _config;
 
-        public UserController(IUserService userService)
+        public UserController(IConfiguration config,
+            IUserService userService)
         {
+            _config = config;
             _userService = userService;
         }
 
@@ -90,6 +95,12 @@ namespace Stories.Controllers
         public IActionResult PageSetting()
         {
             return View();
+        }
+
+        [HttpPost]
+        public JsonResult RegisterAccount(RegisterAccountRequest request)
+        {
+            return Json(true);
         }
     }
 }
