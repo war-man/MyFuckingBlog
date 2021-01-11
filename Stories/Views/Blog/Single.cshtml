@@ -401,17 +401,20 @@
                 buttons: [
                     "zoom",
                     //"share",
-                    //"slideShow",
+                    "slideShow",
                     //"fullScreen",
                     //"download",
                     "thumbs",
                     "close"
                 ],
+                protect: true,
                 afterShow: function () {
-                    $("#scrollUp").hide();
+                    $("#scrollUp").fadeOut("slow");
+                    $(".scroll-progress").fadeOut("slow");
                 },
                 afterClose: function () {
-                    $("#scrollUp").show();
+                    $("#scrollUp").fadeIn("slow");
+                    $(".scroll-progress").fadeIn("slow");
                 }
             });
         });
@@ -423,5 +426,13 @@
         width: 256px;
         height: 256px;
         object-fit: cover;
+    }
+
+    .fancybox-progress {
+        background: #024dff !important;
+    }
+
+    .fancybox-thumbs__list a:before {
+        border: 6px solid #024dff !important;
     }
 </style>
