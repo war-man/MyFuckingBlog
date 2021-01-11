@@ -52,14 +52,14 @@
             <p>Gosh jaguar ostrich quail one excited dear hello and bound and the and bland moral misheard roadrunner flapped lynx far that and jeepers giggled far and far bald that roadrunner python inside held shrewdly the manatee.</p>
         </div>
         <div class="entry-main-content dropcap wow fadeIn animated">
-            <p>Fretful human far recklessly while caterpillar well a well blubbered added one a some far whispered rampantly whispered while irksome far clung irrespective wailed more rosily and where saluted while black dear so yikes as considering recast to some crass until.</p>
+            <p style="white-space: pre-line">@Html.Raw(Model.Content)</p>
             <hr class="wp-block-separator is-style-dots">
             <p>Thanks sniffed in hello after in foolhardy and some far purposefully much one at the much conjointly leapt skimpily that quail sheep some goodness <a href="#">nightingale</a> the instead exited expedient up far ouch mellifluous altruistic and and lighted more instead much when ferret but the.</p>
             <figure class="wp-block-gallery columns-3 wp-block-image">
                 <ul class="blocks-gallery-grid">
-                    <li class="blocks-gallery-item"><a href="#"><img class="border-radius-5" src="/imgs/news/thumb-2.jpg" alt=""></a></li>
-                    <li class="blocks-gallery-item"><a href="#"><img class="border-radius-5" src="/imgs/news/thumb-3.jpg" alt=""></a></li>
-                    <li class="blocks-gallery-item"><a href="#"><img class="border-radius-5" src="/imgs/news/thumb-4.jpg" alt=""></a></li>
+                    <li class="blocks-gallery-item"><a data-fancybox="gallery" href="/imgs/news/thumb-2.jpg"><img class="border-radius-5" src="/imgs/news/thumb-2.jpg" alt=""></a></li>
+                    <li class="blocks-gallery-item"><a data-fancybox="gallery" href="/imgs/news/thumb-3.jpg"><img class="border-radius-5" src="/imgs/news/thumb-3.jpg" alt=""></a></li>
+                    <li class="blocks-gallery-item"><a data-fancybox="gallery" href="https://cdn.q-dance.com/l6hfsc63q612/1gAgOTAWiSkQkOgwWcE4QQ/ef93c01a05df56847bc275c1049f4637/0002_nils_0266-Edit.jpg"><img class="border-radius-5" src="https://cdn.q-dance.com/l6hfsc63q612/1gAgOTAWiSkQkOgwWcE4QQ/ef93c01a05df56847bc275c1049f4637/0002_nils_0266-Edit.jpg" alt=""></a></li>
                 </ul>
                 <figcaption> <i class="ti-credit-card mr-5"></i>Image credit: Behance </figcaption>
             </figure>
@@ -397,7 +397,31 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-
+            $('[data-fancybox="gallery"]').fancybox({
+                buttons: [
+                    "zoom",
+                    //"share",
+                    //"slideShow",
+                    //"fullScreen",
+                    //"download",
+                    "thumbs",
+                    "close"
+                ],
+                afterShow: function () {
+                    $("#scrollUp").hide();
+                },
+                afterClose: function () {
+                    $("#scrollUp").show();
+                }
+            });
         });
     </script>
 }
+
+<style>
+    .blocks-gallery-item a img {
+        width: 256px;
+        height: 256px;
+        object-fit: cover;
+    }
+</style>

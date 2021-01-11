@@ -23,6 +23,7 @@ namespace Stories.Services
         Task<SearchResultViewModel> GetSearchResultPosts(string keyword, int year, int take);
         Task<List<PostResponse>> GetLatestPosts(int pageNumber);
         Task<Post> CreatePost(CreatePostRequest request);
+        Task<LayoutResponse> GetLayoutResponse();
         Task<List<Category>> GetCategories();
         Task<Category> GetCategory(string categoryId);
     }
@@ -150,6 +151,49 @@ namespace Stories.Services
             _unitOfWork.GetRepository<Post>().Add(post);
             await _unitOfWork.CommitAsync();
             return post;
+        }
+
+        public async Task<LayoutResponse> GetLayoutResponse()
+        {
+            // get Categories
+            var categories = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
+            var posts = await _unitOfWork.GetRepository<Post>().GetAll().ToListAsync();
+
+            // get Hot Topics
+            var hotTopics = new List<HotTopic>();
+            foreach(var cat in categories)
+            {
+                var ht = _mapper.Map<HotTopic>(cat);
+                ht.PostCount = posts.Where(x => x.CategoryId == cat.Id).Count();
+                hotTopics.Add(ht);
+            }
+            hotTopics = hotTopics.OrderByDescending(x => x.PostCount).Take(5).ToList();
+
+            // get Don't Miss
+            var dontMiss = posts.OrderBy(r => Guid.NewGuid()).Take(3).ToList();
+
+            // get Footer Posts
+            var footerPosts = new List<FooterPost>();
+            var catFooters = categories.OrderBy(r => Guid.NewGuid()).Take(3).ToList();
+            foreach (var cat in catFooters)
+            {
+                var footerPost = new FooterPost
+                {
+                    CategoryName = cat.Name,
+                    Posts = posts.Where(x => x.CategoryId == cat.Id).OrderBy(r => Guid.NewGuid()).Take(3).ToList()
+                };
+
+                footerPosts.Add(footerPost);
+            }
+
+            // return
+            return new LayoutResponse
+            {
+                Categories = categories,
+                HotTopics = hotTopics,
+                DontMiss = dontMiss,
+                FooterPosts = footerPosts
+            };
         }
 
         public async Task<List<Category>> GetCategories()

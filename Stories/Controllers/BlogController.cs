@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Stories.Models;
 using Stories.Services;
 using Stories.VM.Request;
+using Stories.VM.Response;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -80,15 +81,26 @@ namespace Stories.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        [Route("/404")]
-        public IActionResult PageNotFound()
+        [Route("/Error/{code}")]
+        public IActionResult Error(int code)
         {
-            //https://www.infoworld.com/article/3545304/how-to-handle-404-errors-in-aspnet-core-mvc.html
-            string originalPath = "unknown";
-            if (HttpContext.Items.ContainsKey("originalPath"))
+            ViewBag.code = code;
+            var message = "";
+
+            if (code == 404)
             {
-                originalPath = HttpContext.Items["originalPath"] as string;
+                message = "Đường dẫn bạn đang yêu cầu đã bị xóa hoặc thay đổi";
             }
+            else if (code == 500)
+            {
+                message = "Server đang bị lỗi gì đấy";
+            }
+            else
+            {
+                return Redirect("/Error/404");
+            }
+
+            ViewBag.message = message;
             return View();
         }
         #endregion
@@ -99,6 +111,17 @@ namespace Stories.Controllers
         {
             var post = await _blogService.CreatePost(request);
             return Json(post);
+        }
+
+        [HttpGet("/{controller}/GetLayoutResponse")]
+        public async Task<JsonResult> GetLayoutResponse()
+        {
+            var layoutResponse = await _blogService.GetLayoutResponse();
+            layoutResponse.Ad = new Ad {
+                Link = "#",
+                ImageLink = "https://kxge.somee.com/imgs/ads/ads-1.jpg"
+            };
+            return Json(layoutResponse);
         }
 
         [HttpGet("/{controller}/GetCategories")]

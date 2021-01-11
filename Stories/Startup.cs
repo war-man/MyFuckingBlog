@@ -69,7 +69,7 @@ namespace Stories
             }
             else
             {
-                app.UseExceptionHandler("/404");
+                app.UseExceptionHandler("/Error/500");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -79,12 +79,17 @@ namespace Stories
                 await next();
                 if (context.Response.StatusCode == 404)
                 {
-                    context.Request.Path = "/404";
+                    context.Request.Path = "/Error/404";
+                    await next();
+                }
+                if (context.Response.StatusCode == 500)
+                {
+                    context.Request.Path = "/Error/500";
                     await next();
                 }
             });
 
-            app.UseStatusCodePagesWithReExecute("/404");
+            //app.UseStatusCodePagesWithReExecute("/Error/500");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

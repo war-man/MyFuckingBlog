@@ -18,15 +18,24 @@
     // Load Category
     function LoadCategories() {
         $.ajax({
-            url: "/Blog/GetCategories",
+            url: "/Blog/GetLayoutResponse",
             method: "GET",
             dataType: "json",
             success: function (data) {
+                var categories = data.categories;
+                var hotTopics = data.hotTopics;
+                var dontMiss = data.dontMiss;
+                var ad = data.ad;
+                var footerPosts = data.footerPosts;
+
                 var html = ' <li class="menu-item-has-children"><a href="/"><i class="elegant-icon icon_house_alt mr-5"></i>Trang chủ</a></li>';
                 var html2 = "";
+                var html3 = "";
+                var html4 = "";
+                var html5 = "";
                 var footer = "";
 
-                $(data).each(function (index, cat) {
+                $(categories).each(function (index, cat) {
                     html += '<li><a href="/Blog/Category/' + cat.id + '">' + cat.name + '</a></li>';
                     html2 += '<li><a href="/Blog/Category/' + cat.id + '" role="menuitem" tabindex="0">' + cat.name + '</a></li>';
                     footer += '<div class="carausel-3-columns-item d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5">'
@@ -44,12 +53,91 @@
                     if (index == 8) return;
                 });
 
+                $(hotTopics).each(function (index, ht) {
+                    html3 += '<li class="cat-item cat-item-6"><a href="/Category/' + ht.id + '">' + ht.name + '</a> <span class="post-count">' + ht.postCount + '</span></li>';
+                });
+
+                $(dontMiss).each(function (index, dm) {
+                    html4 += '<li class="mb-30">'
+                        + '<div class="d-flex hover-up-2 transition-normal">'
+                        +    '<div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">'
+                        +        '<a class="color-white" href="/Blog/Single/' + dm.link + '">'
+                        +            '<img src="' + dm.imageLink + '" alt="">'
+                        +            '</a>'
+                        +        '</div>'
+                        +        '<div class="post-content media-body">'
+                        +            '<h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="/Blog/Single/' + dm.link + '">' + dm.title +'</a></h6>'
+                        +            '<div class="entry-meta meta-1 float-left font-x-small text-uppercase">'
+                        +                '<span class="post-on">' + ConvertToPostDate(dm.createdDate) + '</span>'
+                        +                '<span class="post-by has-dot">' + dm.views + ' lượt xem</span>'
+                        +            '</div>'
+                        +        '</div>'
+                        +    '</div>'
+                        +'</li>';
+                });
+
+                $(footerPosts).each(function (index, fp) {
+                    var posts = fp.posts;
+
+                    html5 += '<div class="col-lg-4 col-md-6">'
+                          +      '<div class="sidebar-widget widget-latest-posts mb-30 wow fadeInUp animated">'
+                          +              '<div class="widget-header-2 position-relative mb-30">'
+                          +                  '<h5 class="mt-5 mb-30">' + fp.categoryName + '</h5>'
+                          +              '</div>'
+                          +              '<div class="post-block-list post-module-1">'
+                          +                  '<ul class="list-post">';
+
+                    $(posts).each(function (index, p) {
+                        html5 += '<li class="mb-30">'
+                              +  '<div class="d-flex hover-up-2 transition-normal">'
+                              +  '<div class="post-thumb post-thumb-80 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">'
+                              +      '<a class="color-white" href="/Blog/Single/' + p.link + '">'
+                              +          '<img src="' + p.imageLink + '" alt="">'
+                              +                      '</a>'
+                              +                  '</div>'
+                              +      '<div class="post-content media-body">'
+                              +          '<h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="/Blog/Single/' + p.link + '">' + p.title + '</a></h6>'
+                              +          '<div class="entry-meta meta-1 float-left font-x-small text-uppercase">'
+                              +              '<span class="post-on">' + ConvertToPostDate(p.createdDate) + '</span>'
+                              +              '<span class="post-by has-dot">' + p.views + ' lượt xem</span>'
+                              +          '</div>'
+                              +      '</div>'
+                              +  '</div>'
+                              +          '</li>';
+                    });
+
+                    html5 +=                '</ul>'
+                          +             '</div>'
+                          +         '</div>'
+                          + '</div>';
+                });
+
                 $("#desktop-menu").html(html);
                 $(".mobile_menu .slicknav_menu .menu-item-has-children:nth-child(2) ul").html(html2);
+                $("#hot-topics").html(html3);
+                $("#dont-miss").html(html4);
+                $("#footer-posts").html(html5);
                 $("#categoriesFooter").html(footer);
+
+                $(".widget-ads a").attr("href", ad.link);
+                $(".widget-ads a img").attr("src", ad.imageLink);
+
                 customSlickSlider();
             }
         });
+    }
+
+    function ConvertToPostDate(date) {
+        var tmpDate = '';
+        var postDate = '';
+
+        var monthString = ["giêng", "hai", "ba", "tư", "năm", "sáu", "bảy", "tám", "chín", "mười", "mười một", "mười hai"];
+
+        tmpDate = date.split("T")[0].split("-");
+        postDate = tmpDate[2] + " Tháng " + monthString[parseInt(tmpDate[1]) - 1];
+
+
+        return postDate;
     }
 
     // Scroll progress
@@ -462,7 +550,7 @@
         moreArticles();
         VSticker();
         LoadCategories();
-        setTimeout(function () { blockSomeeAds(); }, 1000);
+        setTimeout(function () { blockSomeeAds(); }, 500);
     });
 
 })(jQuery);
