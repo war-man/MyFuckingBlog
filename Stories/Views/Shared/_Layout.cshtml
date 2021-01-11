@@ -241,10 +241,10 @@
             <div class=" pt-50 pb-50 ">
                 <div class="row mb-20">
                     <div class="col-12 align-self-center main-search-form-cover m-auto">
-                        <p class="text-center"><span class="search-text-bg">Search</span></p>
-                        <form action="Blog/Search" class="search-header">
+                        <p class="text-center"><span class="search-text-bg">Tìm kiếm</span></p>
+                        <form class="search-header" method="GET" asp-controller="Blog" asp-action="Search">
                             <div class="input-group w-100">
-                                <input type="text" class="form-control" placeholder="Search stories, places and people">
+                                <input type="text" class="form-control" placeholder="Tìm bài viết, nội dung, tác giả,..." name="keyword" id="keyword">
                                 <div class="input-group-append">
                                     <button class="btn btn-search bg-white" type="submit">
                                         <i class="elegant-icon icon_search"></i>
@@ -256,7 +256,7 @@
                 </div>
                 <div class="row mt-80 text-center">
                     <div class="col-12 font-small suggested-area">
-                        <h5 class="suggested font-heading mb-20 text-muted"> <strong>Suggested keywords:</strong></h5>
+                        <h5 class="suggested font-heading mb-20 text-muted"> <strong>Từ khóa gợi ý:</strong></h5>
                         <ul class="list-inline d-inline-block">
                             <li class="list-inline-item"><a href="category.html.htm">World</a></li>
                             <li class="list-inline-item"><a href="category.html.htm">American</a></li>
@@ -583,9 +583,10 @@
                             <p>
                                 <strong class="color-black">Follow me</strong><br>
                                 <ul class="header-social-network d-inline-block list-inline color-white mb-20">
-                                    <li class="list-inline-item"><a class="fb" href="#" target="_blank" title="Facebook"><i class="elegant-icon social_facebook"></i></a></li>
-                                    <li class="list-inline-item"><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
-                                    <li class="list-inline-item"><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>
+                                    <li class="list-inline-item"><a class="fb" href="https://facebook.com/levothanhtam" target="_blank" title="Facebook"><i class="elegant-icon social_facebook"></i></a></li>
+                                    <li class="list-inline-item"><a class="tw" href="https://twitter.com/MrChum593" target="_blank" title="Twitter"><i class="elegant-icon social_twitter"></i></a></li>
+                                    <li class="list-inline-item"><a class="is" href="https://instagram.com/vktr.27" target="_blank" title="Instagram"><i class="elegant-icon social_instagram"></i></a></li>
+                                    <li class="list-inline-item"><a class="pt" href="https://www.pinterest.com/thnhtmlv" target="_blank" title="Pinterest"><i class="elegant-icon social_pinterest"></i></a></li>
                                 </ul>
                         </div>
                     </div>
@@ -596,12 +597,12 @@
                             <h5 class="mt-5 mb-30">Quick link</h5>
                         </div>
                         <ul class="font-small">
-                            <li class="cat-item cat-item-2"><a href="#">About me</a></li>
+                            <li class="cat-item cat-item-2"><a href="/About">About me</a></li>
                             <li class="cat-item cat-item-4"><a href="#">Help & Support</a></li>
                             <li class="cat-item cat-item-5"><a href="#">​​Licensing Policy</a></li>
                             <li class="cat-item cat-item-6"><a href="#">Refund Policy</a></li>
                             <li class="cat-item cat-item-7"><a href="#">Hire me</a></li>
-                            <li class="cat-item cat-item-7"><a href="#">Contact</a></li>
+                            <li class="cat-item cat-item-7"><a href="/Contact">Contact</a></li>
                         </ul>
                     </div>
                 </div>
@@ -669,5 +670,26 @@
     <!-- NewsBoard JS -->
     <script src="~/js/main.js"></script>
     @RenderSection("Scripts", required: false)
+    <script>
+        function LoadInstagramPost() {
+            var name = "theweeknd";
+            $.get("https://images" + ~~(Math.random() * 3333) + "-focus-opensocial.googleusercontent.com/gadgets/proxy?container=none&url=https://www.instagram.com/" + name + "/", function (html) {
+                if (html) {
+                    var regex = /_sharedData = ({.*);<\/script>/m;
+                    json = JSON.parse(regex.exec(html)[1]);
+                    edges = json.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges;
+                    var html = "";
+
+                    $.each(edges, function (n, edge) {
+                        var node = edge.node;
+                        html += '<li><a><img class="border-radius-5" src="' + node.display_url + '" alt=""></a></li>';
+                        if (n == 8) return false;
+                    });
+
+                    $(".insta-feed").hide().html(html).fadeIn('slow');
+                }
+            });
+        }
+    </script>
 </body>
 </html>

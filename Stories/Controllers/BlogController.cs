@@ -26,8 +26,9 @@ namespace Stories.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var model = await _blogService.GetPosts();
-            return View(model);
+            var posts = await _blogService.GetHomePagePosts(DateTime.Now.Year, 4);
+
+            return View(posts);
         }
 
         [Authorize(Roles = "Admin")]
@@ -54,9 +55,10 @@ namespace Stories.Controllers
         }
 
         [HttpGet]
-        public IActionResult Search(string keyword)
+        public async Task<IActionResult> Search(string keyword)
         {
-            return View();
+            var model = await _blogService.GetSearchResultPosts(keyword, DateTime.Now.Year, 4);
+            return View(model);
         }
 
         [Route("/About")]
@@ -71,6 +73,7 @@ namespace Stories.Controllers
             return View();
         }
 
+        #region Error
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
@@ -88,6 +91,7 @@ namespace Stories.Controllers
             }
             return View();
         }
+        #endregion
 
         #region API
         [HttpPost("/{controller}/CreatePost")]

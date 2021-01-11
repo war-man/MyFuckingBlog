@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Abp.Linq.Expressions;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using Stories.Models;
 using Stories.VM;
@@ -18,6 +19,8 @@ namespace Stories.Services
     {
         Task<List<Post>> GetPosts();
         Task<BlogSingleViewModel> GetPost(string link);
+        Task<HomePageViewModel> GetHomePagePosts(int year, int take);
+        Task<SearchResultViewModel> GetSearchResultPosts(string keyword, int year, int take);
         Task<List<PostResponse>> GetLatestPosts(int pageNumber);
         Task<Post> CreatePost(CreatePostRequest request);
         Task<List<Category>> GetCategories();
@@ -55,7 +58,62 @@ namespace Stories.Services
             vm.AuthorDescription = user.Description;
             vm.MorePosts = morePosts;
 
+            post.Views += 1;
+            await _unitOfWork.CommitAsync();
+
             return vm;
+        }
+
+        public async Task<HomePageViewModel> GetHomePagePosts(int year, int take)
+        {
+            //var randomCategoryPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CategoryId == "").OrderByDescending(x => x.CreatedDate).ToListAsync();
+
+            var mostPopularPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CreatedDate.Year == year).OrderByDescending(x => x.Views).Take(take).ToListAsync();
+
+            return new HomePageViewModel
+            {
+                MostPopularPosts = mostPopularPosts
+            };
+        }
+
+        public async Task<SearchResultViewModel> GetSearchResultPosts(string keyword, int year, int take)
+        {
+            var totalPosts = new List<Post>();
+            var postR = new List<PostResponse>();
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                var lkw = keyword.Split(" ");
+
+                var predicate = PredicateBuilder.New<Post>();
+                foreach (string searchTerm in lkw)
+                    predicate = predicate.Or(x => x.Title.ToLower().Contains(searchTerm.ToLower()));
+
+                totalPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(predicate).OrderByDescending(x => x.CreatedDate).ToListAsync();
+
+                // lấy 8 bài viết đầu tiên
+                var searchResultPosts = totalPosts.Take(8);
+
+                var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
+
+                foreach (var post in searchResultPosts)
+                {
+                    var pr = _mapper.Map<PostResponse>(post);
+                    pr.Category = cats.Find(x => x.Id == post.CategoryId).Name;
+                    pr.CategoryColor = cats.Find(x => x.Id == post.CategoryId).Color;
+                    postR.Add(pr);
+                }
+            }
+
+            var mostPopularPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CreatedDate.Year == year).OrderByDescending(x => x.Views).Take(take).ToListAsync();
+            
+            return new SearchResultViewModel
+            {
+                KeyWord = keyword,
+                Total = totalPosts.Count,
+                MostPopularPosts = mostPopularPosts,
+                SearchResultPosts = postR
+            };
         }
 
         public async Task<List<PostResponse>> GetLatestPosts(int pageNumber)
@@ -72,8 +130,9 @@ namespace Stories.Services
 
             foreach (var post in posts)
             {
-                var pr =  _mapper.Map<PostResponse>(post);
+                var pr = _mapper.Map<PostResponse>(post);
                 pr.Category = cats.Find(x => x.Id == post.CategoryId).Name;
+                pr.CategoryColor = cats.Find(x => x.Id == post.CategoryId).Color;
                 postR.Add(pr);
             }
 
@@ -108,7 +167,7 @@ namespace Stories.Services
         private int CalculateReadMinutes(string content)
         {
             int length = content.Length;
-            return length/4/250;
+            return length / 4 / 250;
         }
 
         private async Task<string> GenerateLinkAsync(string Title)

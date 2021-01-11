@@ -26,8 +26,14 @@
         </div>
 
         <div class="form-group">
-            <label for="exampleFormControlFile1">Đường dẫn ảnh</label>
-            <input type="text" id="image-link" class="form-control" />
+            <label for="exampleFormControlFile1">Thumb</label>
+            <div style="height:46px">
+                <form id="upload_form" enctype="multipart/form-data" style="display:inline;float:left">
+                    <input name="file" type="file" id="cloudinary-fileupload" accept="image/x-png,image/gif,image/jpeg" style="margin-top:6px" />
+                </form>
+                <button id="upload" type="button" class="btn btn-primary" style="float:right">Upload</button>
+            </div>
+            <input type="text" id="image-link" class="form-control" placeholder="Paste link ảnh vào đây hoặc upload ở trên" />
         </div>
 
         <div class="form-group">
@@ -42,15 +48,10 @@
 
         <button type="button" class="btn btn-primary" id="createPost">Submit</button>
     </div>
-    <div class="col-3">
-        <form id="upload_form" enctype="multipart/form-data">
-            <input name="file" type="file" id="cloudinary-fileupload" />
-        </form>
-        <button id="upload">upload</button>
-    </div>
+    <div class="col-3"></div>
 </div>
 
-
+<div class="modal"></div>
 
 @section Scripts {
     <script>
@@ -73,13 +74,22 @@
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        console.log("success");
-                        console.log(JSON.stringify(data));
-                        console.log(data.secure_url);
+                        iziToast.success({
+                            title: '',
+                            message: 'Upload ảnh thành công, đường dẫn ' + data.secure_url,
+                        });
+
+                        $("#cloudinary-fileupload").val(""); 
+                        $("#cloudinary-fileupload").attr("disabled", true);
+                        $("#upload").attr("disabled", true);
+                        $("#image-link").val(data.secure_url);
+                        $("#image-link").attr("disabled", true);
                     },
                     error: function (data) {
-                        console.log("error");
-                        console.log(data);
+                        iziToast.error({
+                            title: '',
+                            message: 'Upload ảnh thành công, lỗi ' + data,
+                        });
                     }
                 });
             });
@@ -114,6 +124,7 @@
 
                             $("input").val("");
                             $("textarea").val("");
+                            $(".bootstrap-tagsinput").html('<input type="text" placeholder="" size="1">');
 
                             iziToast.success({
                                 title: '',
@@ -140,6 +151,14 @@
                 e.returnValue = '';
             }
         });
+
+        $(document)
+            .ajaxStart(function () {
+                $('.modal').show();
+            })
+            .ajaxStop(function () {
+                $('.modal').hide();
+            });
 
         function LoadCategories() {
             $.ajax({

@@ -13,6 +13,8 @@ namespace Stories.Models
         public string Id { get; set; }
         [Column("name")]
         public string Name { get; set; }
+        [Column("color")]
+        public string Color { get; set; }
         [Column("description")]
         public string Description { get; set; }
         [Column("thumb_link")]

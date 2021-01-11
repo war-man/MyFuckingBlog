@@ -11,6 +11,7 @@ namespace Stories.VM.Response
         public DateTime CreatedDate { get; set; }
         public string CategoryId { get; set; }
         public string Category { get; set; }
+        public string CategoryColor { get; set; }
         public string ImageLink { get; set; }
         public int ReadMinute { get; set; }
         public int Views { get; set; }

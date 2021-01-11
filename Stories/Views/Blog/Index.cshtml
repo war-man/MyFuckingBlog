@@ -1,5 +1,11 @@
-﻿@{
+﻿@model Stories.VM.HomePageViewModel
+
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
     ViewData["Title"] = "Blog bởi Lê Võ Thành Tâm";
+    string[] monthString = { "giêng", "hai", "ba", "tư", "năm", "sáu", "bảy", "tám", "chín", "mười", "mười một", "mười hai" };
 }
 
 @{
@@ -70,7 +76,7 @@
                     </div>
                 </div>
             </div>
-            <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="0.2s">
+            <article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated">
                 <div class="post-card-1 border-radius-10 hover-up">
                     <div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(imgs/news/news-1.jpg)">
                         <a class="img-link" href="single.html.htm"></a>
@@ -365,74 +371,29 @@
                     </div>
                     <div class="sidebar-widget widget-latest-posts mb-50 wow fadeInUp animated">
                         <div class="widget-header-1 position-relative mb-30">
-                            <h5 class="mt-5 mb-30">Most popular</h5>
+                            <h5 class="mt-5 mb-30">Phổ biến nhất</h5>
                         </div>
                         <div class="post-block-list post-module-1">
                             <ul class="list-post">
-                                <li class="mb-30 wow fadeInUp animated">
-                                    <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
-                                        <div class="post-content media-body">
-                                            <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="single.html.htm">Spending Some Quality Time with Kids? It’s Possible</a></h6>
-                                            <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
-                                                <span class="post-on">05 August</span>
-                                                <span class="post-by has-dot">150 views</span>
+                                @foreach (var post in Model.MostPopularPosts)
+                                {
+                                    <li class="mb-30 wow fadeInUp animated">
+                                        <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
+                                            <div class="post-content media-body">
+                                                <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="/Blog/Single/@post.Link">@(post.Title.Length > 50 ? (post.Title.Substring(0, Math.Min(post.Title.Length, 47)) + "...") : post.Title)</a></h6>
+                                                <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
+                                                    <span class="post-on">@(post.CreatedDate.ToString("dd/MM").Replace("/", " tháng "))</span>
+                                                    <span class="post-by has-dot">@post.Views lượt xem</span>
+                                                </div>
+                                            </div>
+                                            <div class="post-thumb post-thumb-80 d-flex ml-15 border-radius-5 img-hover-scale overflow-hidden">
+                                                <a class="color-white" href="/Blog/Single/@post.Link">
+                                                    <img src="@post.ImageLink" alt="">
+                                                </a>
                                             </div>
                                         </div>
-                                        <div class="post-thumb post-thumb-80 d-flex ml-15 border-radius-5 img-hover-scale overflow-hidden">
-                                            <a class="color-white" href="single.html.htm">
-                                                <img src="imgs/news/thumb-6.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="mb-30 wow fadeInUp animated">
-                                    <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
-                                        <div class="post-content media-body">
-                                            <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="single.html.htm">Relationship Podcasts are Having “That” Talk</a></h6>
-                                            <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
-                                                <span class="post-on">12 August</span>
-                                                <span class="post-by has-dot">6k views</span>
-                                            </div>
-                                        </div>
-                                        <div class="post-thumb post-thumb-80 d-flex ml-15 border-radius-5 img-hover-scale overflow-hidden">
-                                            <a class="color-white" href="single.html.htm">
-                                                <img src="imgs/news/thumb-7.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class="mb-30 wow fadeInUp animated">
-                                    <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
-                                        <div class="post-content media-body">
-                                            <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="single.html.htm">Here’s How to Get the Best Sleep at Night</a></h6>
-                                            <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
-                                                <span class="post-on">15 August</span>
-                                                <span class="post-by has-dot">16k views</span>
-                                            </div>
-                                        </div>
-                                        <div class="post-thumb post-thumb-80 d-flex ml-15 border-radius-5 img-hover-scale overflow-hidden">
-                                            <a class="color-white" href="single.html.htm">
-                                                <img src="imgs/news/thumb-2.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
-                                <li class=" wow fadeInUp animated">
-                                    <div class="d-flex bg-white has-border p-25 hover-up transition-normal border-radius-5">
-                                        <div class="post-content media-body">
-                                            <h6 class="post-title mb-15 text-limit-2-row font-medium"><a href="single.html.htm">America’s Governors Get Tested for a Virus That Is Testing Them</a></h6>
-                                            <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
-                                                <span class="post-on">12 August</span>
-                                                <span class="post-by has-dot">3k views</span>
-                                            </div>
-                                        </div>
-                                        <div class="post-thumb post-thumb-80 d-flex ml-15 border-radius-5 img-hover-scale overflow-hidden">
-                                            <a class="color-white" href="single.html.htm">
-                                                <img src="imgs/news/thumb-3.jpg" alt="">
-                                            </a>
-                                        </div>
-                                    </div>
-                                </li>
+                                    </li>
+                                }
                             </ul>
                         </div>
                     </div>
@@ -537,46 +498,6 @@
             });
         });
 
-        function LoadInstagramPost() {
-            //var queryId = "17888483320059182";
-            //var userId = "1951415043";
-
-            //$.ajax({
-            //    url: 'https://instagram.com/graphql/query/?query_id=' + queryId + '&variables={"id":"' + userId + '","first":20,"after":null}',
-            //    method: "GET",
-            //    dataType: "json",
-            //    cache: false,
-            //    success: function (data) {
-            //        var node = data.data.user.edge_owner_to_timeline_media.edges;
-
-            //        $(node).each(function (i, n) {
-            //            console.log(n.display_url);
-            //        });
-            //    },
-            //    error: function (data) {
-            //        console.log(data);
-            //    }
-            //});
-
-            var name = "theweeknd";
-            $.get("https://images" + ~~(Math.random() * 3333) + "-focus-opensocial.googleusercontent.com/gadgets/proxy?container=none&url=https://www.instagram.com/" + name + "/", function (html) {
-                if (html) {
-                    var regex = /_sharedData = ({.*);<\/script>/m;
-                    json = JSON.parse(regex.exec(html)[1]);
-                    edges = json.entry_data.ProfilePage[0].graphql.user.edge_owner_to_timeline_media.edges;
-                    var html = "";
-
-                    $.each(edges, function (n, edge) {
-                        var node = edge.node;
-                        html += '<li><a><img class="border-radius-5" src="' + node.display_url + '" alt=""></a></li>';
-                        if (n == 8) return false;
-                    });
-
-                    $(".insta-feed").hide().html(html).fadeIn('slow');
-                }
-            });
-        }
-
         function LoadLatestPosts(PAGENOW) {
             $.ajax({
                 url: "/Blog/GetLatestPosts",
@@ -598,7 +519,7 @@
                             + '</div>'
                             + '<ul class="social-share">'
                             + '<li><a href="#"><i class="elegant-icon social_share"></i></a></li>'
-                            + '<li><a class="fb" href="#" title="Share on Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>'
+                            + '<li><a class="fb" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/' + post.link + '" title="Chia sẻ lên Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>'
                             + '<li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>'
                             + '<li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>'
                             + '</ul>'
@@ -607,7 +528,7 @@
                             + '<div class="col-md-8 align-self-center">'
                             + '<div class="post-content">'
                             + '<div class="entry-meta meta-0 font-small mb-10">'
-                            + '<a href="/Blog/Category/' + post.categoryId + '"><span class="post-cat text-primary">' + post.category + '</span></a>'
+                            + '<a href="/Blog/Category/' + post.categoryId + '"><span class="post-cat ' + post.categoryColor + '">' + post.category + '</span></a>'
                             + '</div>'
                             + '<h5 class="post-title font-weight-900 mb-20">'
                             + '<a href="/Blog/Single/' + post.link + '">' + post.title + '</a>'

@@ -34,8 +34,8 @@
             </div>
             <div class="col-md-6 text-right d-none d-md-inline">
                 <ul class="header-social-network d-inline-block list-inline mr-15">
-                    <li class="list-inline-item text-muted"><span>Share this: </span></li>
-                    <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="#"><i class="elegant-icon social_facebook"></i></a></li>
+                    <li class="list-inline-item text-muted"><span>Chia sẻ bài viết: </span></li>
+                    <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link"><i class="elegant-icon social_facebook"></i></a></li>
                     <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="#"><i class="elegant-icon social_twitter "></i></a></li>
                     <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
                 </ul>
@@ -394,3 +394,10 @@
     </article>
 </div>
 <!--container-->
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+        });
+    </script>
+}

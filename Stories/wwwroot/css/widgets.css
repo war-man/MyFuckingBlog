@@ -827,6 +827,11 @@ figure .social-share:hover li,
         background: #bd081c;
     }
 
+    .post-thumb .social-share li a.is,
+    .header-social-network .list-inline-item a.is {
+        background: #E1306C;
+    }
+
 .thumb-overlay .post-thumb .social-share {
     right: 35px;
 }

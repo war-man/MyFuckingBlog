@@ -3,9 +3,8 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    <meta name="viewport" content="width=device-width" />
     <title>@ViewData["Title"] - Stories Admin</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/imgs/theme/favicon.png">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
     <link href="~/css/vendor/bootstrap-tagsinput.css" rel="stylesheet" />
@@ -13,10 +12,11 @@
         .bootstrap-tagsinput {
             padding-bottom: 7px;
         }
-        .bootstrap-tagsinput .tag {
-            margin-right: 2px;
-            color: white;
-        }
+
+            .bootstrap-tagsinput .tag {
+                margin-right: 2px;
+                color: white;
+            }
 
         .label-info {
             background-color: #5bc0de;
@@ -33,6 +33,17 @@
             white-space: nowrap;
             vertical-align: baseline;
             border-radius: .25em;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba( 255, 255, 255, .8 ) url('imgs/theme/loading.svg') 50% 50% no-repeat;
         }
     </style>
 </head>
