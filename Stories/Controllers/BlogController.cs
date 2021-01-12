@@ -137,6 +137,13 @@ namespace Stories.Controllers
             var post = await _blogService.GetLatestPosts(pageNumber);
             return Json(post);
         }
+
+        [HttpGet("/{controller}/GetAuthorPosts")]
+        public async Task<JsonResult> GetPostByAuthor(string username, int pageNumber)
+        {
+            var post = await _blogService.GetPostByAuthor(username, pageNumber);
+            return Json(post);
+        }
         #endregion
     }
 }

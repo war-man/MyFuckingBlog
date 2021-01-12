@@ -17,6 +17,7 @@ namespace Stories.Services
     public interface IUserService
     {
         Task<User> AuthenticateUser(LogInRequest login);
+        Task<User> GetUserInfo(string username);
     }
 
     public class UserService : IUserService
@@ -34,6 +35,13 @@ namespace Stories.Services
         public async Task<User> AuthenticateUser(LogInRequest login)
         {
             var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == login.Username && x.Password == login.Password);
+
+            return user;
+        }
+
+        public async Task<User> GetUserInfo(string username)
+        {
+            var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == username);
 
             return user;
         }

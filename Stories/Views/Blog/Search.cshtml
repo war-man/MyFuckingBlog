@@ -7,6 +7,7 @@
     ViewData["Title"] = "Tìm kiếm";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string[] monthString = { "giêng", "hai", "ba", "tư", "năm", "sáu", "bảy", "tám", "chín", "mười", "mười một", "mười hai" };
+    var Count = (Model.Total % 8 > 1) ? Model.Total / 8 + 1 : Model.Total / 8;
 }
 
 <!--archive header-->
@@ -65,12 +66,18 @@
                 <div class="pagination-area mb-30 wow fadeInUp animated">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
-                            <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_left"></i></a></li>
-                            @for (int i = 1; i <= Model.Total/8 + 1; i++)
+                            @if (Count > 1)
                             {
-                                <li class="page-item @(i == 1 ? "active" : "" )"><a class="page-link">@i</a></li>
+                                <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_left"></i></a></li>
                             }
-                            <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_right"></i></a></li>
+                            @for (int i = 1; i <= Count; i++)
+                            {
+                                <li class="page-item@(i == 1 ? " active" : "")"><a class="page-link">@(i < 10 ? ("0" + i) : i + "")</a></li>
+                            }
+                            @if (Count > 1)
+                            {
+                                <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_right"></i></a></li>
+                            }
                         </ul>
                     </nav>
                 </div>

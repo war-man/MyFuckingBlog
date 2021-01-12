@@ -8,6 +8,7 @@ namespace Stories.VM.Response
     public class PostResponse
     {
         public string Title { get; set; }
+        public string Content { get; set; }
         public DateTime CreatedDate { get; set; }
         public string CategoryId { get; set; }
         public string Category { get; set; }

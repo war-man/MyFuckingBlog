@@ -17,13 +17,16 @@ namespace Stories.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _userService;
+        private readonly IBlogService _blogService;
         private IConfiguration _config;
 
         public UserController(IConfiguration config,
-            IUserService userService)
+            IUserService userService,
+            IBlogService blogService)
         {
             _config = config;
             _userService = userService;
+            _blogService = blogService;
         }
 
         [HttpGet("/LogIn")]
@@ -85,9 +88,13 @@ namespace Stories.Controllers
         }
 
         [Route("/Author/{username}")]
-        public IActionResult Author(string username)
+        public async Task<IActionResult> Author(string username)
         {
-            return View();
+            var model = await _userService.GetUserInfo(username);
+
+            ViewBag.Count = await _blogService.CountPostByAuthor(username);
+            ViewBag.MostPopularPost = await _blogService.GetMostPopularPosts();
+            return View(model);
         }
 
         [Authorize(Roles = "Admin")]

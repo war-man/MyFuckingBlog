@@ -120,7 +120,7 @@
                                 if (User.Identity.IsAuthenticated)
                                 {
                                     <li class="list-inline-item menu-item-has-children">
-                                        <a href="#"><i class="elegant-icon icon_profile mr-5"></i>@User.Claims.FirstOrDefault(c => c.Type == "Name").Value</a>
+                                        <a href="/Author/@User.Claims.FirstOrDefault(c => c.Type == "Username").Value"><i class="elegant-icon icon_profile mr-5"></i>@User.Claims.FirstOrDefault(c => c.Type == "Name").Value</a>
                                         <ul class="sub-menu font-small">
                                             <li><a href="/Author/@User.Claims.FirstOrDefault(c => c.Type == "Username").Value">Trang cá nhân</a></li>
                                             @if (User.Claims.FirstOrDefault(c => c.Type == "IsAuthor").Value == "true")
@@ -457,7 +457,7 @@
 
                     $.each(edges, function (n, edge) {
                         var node = edge.node;
-                        html += '<li><a><img class="border-radius-5" src="' + node.display_url + '" alt=""></a></li>';
+                        html += '<li><a data-fancybox="instagram" href="' + node.display_url + '"><img class="border-radius-5" src="' + node.thumbnail_src + '" alt=""></a></li>';
                         if (n == 8) return false;
                     });
 

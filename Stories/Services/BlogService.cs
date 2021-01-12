@@ -19,6 +19,9 @@ namespace Stories.Services
     {
         Task<List<Post>> GetPosts();
         Task<BlogSingleViewModel> GetPost(string link);
+        Task<List<Post>> GetMostPopularPosts();
+        Task<int> CountPostByAuthor(string username);
+        Task<List<PostResponse>> GetPostByAuthor(string username, int pageNumber);
         Task<HomePageViewModel> GetHomePagePosts(int year, int take);
         Task<SearchResultViewModel> GetSearchResultPosts(string keyword, int year, int take);
         Task<List<PostResponse>> GetLatestPosts(int pageNumber);
@@ -44,6 +47,42 @@ namespace Stories.Services
         {
             var posts = await _unitOfWork.GetRepository<Post>().GetAll().ToListAsync();
             return posts;
+        }
+
+        public async Task<List<Post>> GetMostPopularPosts()
+        {
+            var mostPopularPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CreatedDate.Year == DateTime.Now.Year).OrderByDescending(x => x.Views).Take(4).ToListAsync();
+            return mostPopularPosts;
+        }
+
+        public async Task<int> CountPostByAuthor(string username)
+        {
+            var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == username);
+            var count = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.AuthorId == user.Id).CountAsync();
+            return count;
+        }
+
+        public async Task<List<PostResponse>> GetPostByAuthor(string username, int pageNumber)
+        {
+            var take = 8;
+            var skip = (pageNumber - 1) * take;
+
+            var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == username);
+            var posts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.AuthorId == user.Id).OrderByDescending(x => x.CreatedDate).Skip(skip).Take(take).ToListAsync();
+
+            var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
+
+            var postR = new List<PostResponse>();
+
+            foreach (var post in posts)
+            {
+                var pr = _mapper.Map<PostResponse>(post);
+                pr.Category = cats.Find(x => x.Id == post.CategoryId).Name;
+                pr.CategoryColor = cats.Find(x => x.Id == post.CategoryId).Color;
+                postR.Add(pr);
+            }
+
+            return postR;
         }
 
         public async Task<BlogSingleViewModel> GetPost(string link)
@@ -211,7 +250,7 @@ namespace Stories.Services
         private int CalculateReadMinutes(string content)
         {
             int length = content.Length;
-            return length / 4 / 250;
+            return length / 4 / 225;
         }
 
         private async Task<string> GenerateLinkAsync(string Title)
