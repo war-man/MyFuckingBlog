@@ -20,8 +20,9 @@ namespace Stories.Services
         Task<List<Post>> GetPosts();
         Task<BlogSingleViewModel> GetPost(string link);
         Task<List<Post>> GetMostPopularPosts();
-        Task<int> CountPostByAuthor(string username);
+        Task<int> CountPost(int type, string param);
         Task<List<PostResponse>> GetPostByAuthor(string username, int pageNumber);
+        Task<List<PostResponse>> GetPostByCategory(string categoryName, int pageNumber);
         Task<HomePageViewModel> GetHomePagePosts(int year, int take);
         Task<SearchResultViewModel> GetSearchResultPosts(string keyword, int year, int take);
         Task<List<PostResponse>> GetLatestPosts(int pageNumber);
@@ -55,11 +56,19 @@ namespace Stories.Services
             return mostPopularPosts;
         }
 
-        public async Task<int> CountPostByAuthor(string username)
+        public async Task<int> CountPost(int type, string param)
         {
-            var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == username);
-            var count = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.AuthorId == user.Id).CountAsync();
-            return count;
+            // 1: Count by Author Username
+            // 2: Count by Category ID
+            if (type == 1)
+            {
+                var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == param);
+                var count1 = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.AuthorId == user.Id).CountAsync();
+                return count1;
+            }
+
+            var count2 = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CategoryId == param).CountAsync();
+            return count2;
         }
 
         public async Task<List<PostResponse>> GetPostByAuthor(string username, int pageNumber)
@@ -74,6 +83,27 @@ namespace Stories.Services
 
             var postR = new List<PostResponse>();
 
+            foreach (var post in posts)
+            {
+                var pr = _mapper.Map<PostResponse>(post);
+                pr.Category = cats.Find(x => x.Id == post.CategoryId).Name;
+                pr.CategoryColor = cats.Find(x => x.Id == post.CategoryId).Color;
+                postR.Add(pr);
+            }
+
+            return postR;
+        }
+
+        public async Task<List<PostResponse>> GetPostByCategory(string categoryId, int pageNumber)
+        {
+            var take = 8;
+            var skip = (pageNumber - 1) * take;
+
+            var posts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CategoryId == categoryId).OrderByDescending(x => x.CreatedDate).Skip(skip).Take(take).ToListAsync();
+
+            var postR = new List<PostResponse>();
+
+            var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
             foreach (var post in posts)
             {
                 var pr = _mapper.Map<PostResponse>(post);
@@ -247,6 +277,7 @@ namespace Stories.Services
             return category;
         }
 
+        #region Helper
         private int CalculateReadMinutes(string content)
         {
             int length = content.Length;
@@ -291,5 +322,6 @@ namespace Stories.Services
             }
             return sb.ToString();
         }
+        #endregion
     }
 }

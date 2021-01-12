@@ -42,10 +42,10 @@ namespace Stories.Controllers
         public async Task<IActionResult> Category(string id)
         {
             var category = await _blogService.GetCategory(id);
+            var Count = await _blogService.CountPost(2, id);
 
-            ViewBag.category = category;
-
-            return View();
+            ViewBag.Count = Count;
+            return View(category);
         }
 
         [Route("/{controller}/Single/{link}")]
@@ -142,6 +142,13 @@ namespace Stories.Controllers
         public async Task<JsonResult> GetPostByAuthor(string username, int pageNumber)
         {
             var post = await _blogService.GetPostByAuthor(username, pageNumber);
+            return Json(post);
+        }
+
+        [HttpGet("/{controller}/GetPostByCategory")]
+        public async Task<JsonResult> GetPostByCategory(string categoryId, int pageNumber)
+        {
+            var post = await _blogService.GetPostByCategory(categoryId, pageNumber);
             return Json(post);
         }
         #endregion

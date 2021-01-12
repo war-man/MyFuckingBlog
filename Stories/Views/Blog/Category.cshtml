@@ -1,17 +1,17 @@
-﻿
+﻿@model Category
 @{
-    var category = ViewBag.category as Category;
-    ViewData["Title"] = category.Name;
+    ViewData["Title"] = Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var Count = (ViewBag.Count % 12 > 1) ? ViewBag.Count / 12 + 1 : ViewBag.Count / 12;
 }
 
 <!--archive header-->
 <div class="archive-header pt-50 text-center">
     <div class="container">
-        <h2 class="font-weight-900">@category.Name</h2>
+        <h2 class="font-weight-900">@Model.Name</h2>
         <div class="breadcrumb">
             <a href="/" rel="nofollow">Trang chủ</a>
-            <span></span> @category.Name
+            <span></span> @Model.Name
         </div>
         <div class="bt-1 border-color-1 mt-30 mb-50"></div>
     </div>
@@ -353,12 +353,18 @@
                 <div class="pagination-area mb-30 wow fadeInUp animated">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-start">
-                            <li class="page-item"><a class="page-link" href="#"><i class="elegant-icon arrow_left"></i></a></li>
-                            <li class="page-item active"><a class="page-link" href="#">01</a></li>
-                            <li class="page-item"><a class="page-link" href="#">02</a></li>
-                            <li class="page-item"><a class="page-link" href="#">03</a></li>
-                            <li class="page-item"><a class="page-link" href="#">04</a></li>
-                            <li class="page-item"><a class="page-link" href="#"><i class="elegant-icon arrow_right"></i></a></li>
+                            @if (Count > 1)
+                            {
+                                <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_left"></i></a></li>
+                            }
+                            @for (int i = 1; i <= Count; i++)
+                            {
+                                <li class="page-item@(i == 1 ? " active" : "")"><a class="page-link">@(i < 10 ? ("0" + i) : i + "")</a></li>
+                            }
+                            @if (Count > 1)
+                            {
+                                <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_right"></i></a></li>
+                            }
                         </ul>
                     </nav>
                 </div>
@@ -366,3 +372,110 @@
         </div>
     </div>
 </div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var PAGENOW = 1;
+            var PAGEMAX = $("ul.pagination.justify-content-start li").length - 2;
+            LoadCategoryPosts(PAGENOW);
+
+            $(".page-link").click(function () {
+                if (!$(this).find("i").length) {
+                    PAGENOW = parseInt($(this).html())
+                }
+                else {
+                    var i = $(this).find("i");
+                    if (i.hasClass("arrow_right")) {
+                        if (PAGENOW != PAGEMAX) {
+                            PAGENOW++;
+                        }
+                    }
+                    else {
+                        if (PAGENOW != 1) {
+                            PAGENOW--;
+                        }
+                    }
+                }
+
+                LoadCategoryPosts(PAGENOW);
+                $('html, body').animate({
+                    scrollTop: $(".breadcrumb").offset().top - 55
+                }, 1000);
+            });
+        });
+
+        function LoadCategoryPosts(PAGENOW) {
+            $.ajax({
+                url: "/Blog/GetPostByCategory",
+                method: "GET",
+                dataType: "json",
+                data: {
+                    categoryId: '@Model.Id',
+                    pageNumber: PAGENOW
+                },
+                success: function (data) {
+                    var html = '';
+
+                    console.log(data);
+
+                    @*$(data).each(function (index, post) {
+                        html += '<article class="hover-up-2 transition-normal wow fadeInUp animated">'
+                            + '<div class="row mb-40 list-style-2">'
+                            + '<div class="col-md-4">'
+                            + '<div class="post-thumb position-relative border-radius-5">'
+                            + '<div class="img-hover-slide border-radius-5 position-relative" style="background-image: url(' + post.imageLink + ')">'
+                            + '<a class="img-link" href="/Blog/Single/' + post.link + '"></a>'
+                            + '</div>'
+                            + '<ul class="social-share">'
+                            + '<li><a href="#"><i class="elegant-icon social_share"></i></a></li>'
+                            + '<li><a class="fb" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/' + post.link + '" title="Chia sẻ lên Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>'
+                            + '<li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>'
+                            + '<li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>'
+                            + '</ul>'
+                            + '</div>'
+                            + '</div>'
+                            + '<div class="col-md-8 align-self-center">'
+                            + '<div class="post-content">'
+                            + '<div class="entry-meta meta-0 font-small mb-10">'
+                            + '<a href="/Blog/Category/' + post.categoryId + '"><span class="post-cat ' + post.categoryColor + '">' + post.category + '</span></a>'
+                            + '</div>'
+                            + '<h5 class="post-title font-weight-900 mb-20">'
+                            + '<a href="/Blog/Single/' + post.link + '">' + post.title + '</a>'
+                            + '</h5>'
+                            + '<div class="entry-meta meta-1 float-left font-x-small text-uppercase">'
+                            + '<span class="post-on">' + ConvertToPostDate(post.createdDate) + '</span>'
+                            + '<span class="time-reading has-dot">' + post.readMinute + ' phút đọc</span>'
+                            + '<span class="post-by has-dot">' + post.views + ' lượt xem</span>'
+                            + '</div>'
+                            + '</div>'
+                            + '</div>'
+                            + '</div>'
+                            + '</article>';
+                    });
+
+                    $("#latestPost").html(html);
+                    $(".page-item").removeClass("active");
+                    $(".page-link:contains(" + PAGENOW + ")").parent().addClass("active");*@
+                }
+            });
+        }
+
+        function ConvertToPostDate(date) {
+            var tmpDate = '';
+            var postDate = '';
+
+            var monthString = ["giêng", "hai", "ba", "tư", "năm", "sáu", "bảy", "tám", "chín", "mười", "mười một", "mười hai"];
+
+            tmpDate = date.split("T")[0].split("-");
+            postDate = tmpDate[2] + " Tháng " + monthString[parseInt(tmpDate[1]) - 1];
+
+
+            return postDate;
+        }
+    </script>
+}
+<style>
+    .page-item.active .page-link {
+        background-color: #007bff !important;
+    }
+</style>

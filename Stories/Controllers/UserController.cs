@@ -92,7 +92,7 @@ namespace Stories.Controllers
         {
             var model = await _userService.GetUserInfo(username);
 
-            ViewBag.Count = await _blogService.CountPostByAuthor(username);
+            ViewBag.Count = await _blogService.CountPost(1, username);
             ViewBag.MostPopularPost = await _blogService.GetMostPopularPosts();
             return View(model);
         }
