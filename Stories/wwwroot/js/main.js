@@ -130,6 +130,7 @@
 
                 $(".widget-ads a").attr("href", ad.link);
                 $(".widget-ads a img").attr("src", ad.imageLink);
+                $(".widget-ads span").html($(".widget-ads span").html() + ad.sponsoredBy);
 
                 customSlickSlider();
             }

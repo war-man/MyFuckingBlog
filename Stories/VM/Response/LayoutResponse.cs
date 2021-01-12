@@ -26,6 +26,7 @@ namespace Stories.VM.Response
     {
         public string ImageLink { get; set; }
         public string Link { get; set; }
+        public string SponsoredBy { get; set; }
     }
 
     public class FooterPost

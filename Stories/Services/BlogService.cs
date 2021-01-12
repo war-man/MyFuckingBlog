@@ -121,12 +121,25 @@ namespace Stories.Services
             var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Id == post.AuthorId);
             var morePosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToListAsync();
 
+            var relatedPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CategoryId == post.CategoryId && x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToListAsync();
+            var postR = new List<PostResponse>();
+
+            var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
+            foreach (var p in relatedPosts)
+            {
+                var pr = _mapper.Map<PostResponse>(p);
+                pr.Category = cats.Find(x => x.Id == p.CategoryId).Name;
+                pr.CategoryColor = cats.Find(x => x.Id == p.CategoryId).Color;
+                postR.Add(pr);
+            }
+
             var vm = _mapper.Map<BlogSingleViewModel>(post);
             vm.AuthorName = user.Name;
             vm.AuthorUsername = user.Username;
             vm.AuthorAvatar = user.Avatar;
             vm.AuthorDescription = user.Description;
             vm.MorePosts = morePosts;
+            vm.RelatedPosts = postR;
 
             post.Views += 1;
             await _unitOfWork.CommitAsync();

@@ -119,7 +119,8 @@ namespace Stories.Controllers
             var layoutResponse = await _blogService.GetLayoutResponse();
             layoutResponse.Ad = new Ad {
                 Link = "#",
-                ImageLink = "https://kxge.somee.com/imgs/ads/ads-1.jpg"
+                ImageLink = "https://kxge.somee.com/imgs/ads/ads-1.jpg",
+                SponsoredBy = "bạn Nam giấu tên"
             };
             return Json(layoutResponse);
         }

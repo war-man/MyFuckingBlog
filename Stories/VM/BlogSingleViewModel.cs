@@ -1,4 +1,5 @@
 ﻿using Stories.Models;
+using Stories.VM.Response;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,5 +48,6 @@ namespace Stories.VM
         public List<Comment> Comments { get; set; }
 
         public List<Post> MorePosts { get; set; }
+        public List<PostResponse> RelatedPosts { get; set; }
     }
 }
