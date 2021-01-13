@@ -314,13 +314,7 @@
                             <h5 class="mt-5 mb-30">Tagcloud</h5>
                         </div>
                         <div class="tagcloud mt-50">
-                            <a class="tag-cloud-link" href="category.html.htm">beautiful</a>
-                            <a class="tag-cloud-link" href="category.html.htm">New York</a>
-                            <a class="tag-cloud-link" href="category.html.htm">droll</a>
-                            <a class="tag-cloud-link" href="category.html.htm">intimate</a>
-                            <a class="tag-cloud-link" href="category.html.htm">loving</a>
-                            <a class="tag-cloud-link" href="category.html.htm">travel</a>
-                            <a class="tag-cloud-link" href="category.html.htm">fighting </a>
+
                         </div>
                     </div>
                 </div>
@@ -394,7 +388,6 @@
                     $.each(edges, function (n, edge) {
                         var node = edge.node;
                         html += '<li><a data-fancybox="instagram" href="' + node.display_url + '"><img class="border-radius-5" src="' + node.thumbnail_src + '" alt=""></a></li>';
-                        if (n == 8) return false;
                     });
 
                     $(".insta-feed").hide().html(html).fadeIn('slow');

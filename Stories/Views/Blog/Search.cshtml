@@ -4,7 +4,7 @@
 @inject IConfiguration Configuration
 
 @{
-    ViewData["Title"] = "Tìm kiếm";
+    ViewData["Title"] = Model.Tag ? "Tag" : "Tìm kiếm";
     Layout = "~/Views/Shared/_Layout.cshtml";
     string[] monthString = { "giêng", "hai", "ba", "tư", "năm", "sáu", "bảy", "tám", "chín", "mười", "mười một", "mười hai" };
     var Count = (Model.Total % 8 > 1) ? Model.Total / 8 + 1 : Model.Total / 8;
@@ -84,16 +84,12 @@
             </div>
             <div class="col-lg-4">
                 <div class="widget-area">
-                    <div class="sidebar-widget widget-about mb-50 pt-30 pr-30 pb-30 pl-30 bg-white border-radius-5 has-border  wow fadeInUp animated">
-                        <img class="about-author-img mb-25" src="/imgs/authors/author.jpg" alt="">
-                        <h5 class="mb-20">Hello, I'm Steven</h5>
-                        <p class="font-medium text-muted">Hi, I’m Stenven, a Florida native, who left my career in corporate wealth management six years ago to embark on a summer of soul searching that would change the course of my life forever.</p>
-                        <strong>Follow me: </strong>
-                        <ul class="header-social-network d-inline-block list-inline color-white mb-20">
-                            <li class="list-inline-item"><a class="fb" href="#" target="_blank" title="Facebook"><i class="elegant-icon social_facebook"></i></a></li>
-                            <li class="list-inline-item"><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
-                            <li class="list-inline-item"><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>
-                        </ul>
+                    <div class="sidebar-widget widget-about mb-50 border-radius-5 has-border wow fadeInUp animated">
+                        <div class="fb-page" data-href="https://www.facebook.com/BLACKCrewNeverSurrender/" data-tabs="" data-width="" data-height="" data-small-header="false" data-adapt-container-width="true" data-hide-cover="false" data-show-facepile="true">
+                            <blockquote cite="https://www.facebook.com/BLACKCrewNeverSurrender/" class="fb-xfbml-parse-ignore">
+                                <a href="https://www.facebook.com/BLACKCrewNeverSurrender/">ＫＸＧＥ Presents BLΛƆK Crew</a>
+                            </blockquote>
+                        </div>
                     </div>
                     <div class="sidebar-widget widget-latest-posts mb-50 wow fadeInUp animated">
                         <div class="widget-header-1 position-relative mb-30">

@@ -153,9 +153,22 @@ namespace Stories.Services
 
             var mostPopularPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CreatedDate.Year == year).OrderByDescending(x => x.Views).Take(take).ToListAsync();
 
+            // get Hot tags
+            var ht = new List<string>();
+            foreach (var post in mostPopularPosts)
+            {
+                var tag = post.Tag.Split(" "); ;
+                foreach (var t in tag)
+                {
+                    ht.Add(t);
+                }
+            }
+            ht = ht.OrderBy(r => Guid.NewGuid()).Take(4).ToList();
+
             return new HomePageViewModel
             {
-                MostPopularPosts = mostPopularPosts
+                MostPopularPosts = mostPopularPosts,
+                HotTags = ht
             };
         }
 
@@ -192,6 +205,7 @@ namespace Stories.Services
             
             return new SearchResultViewModel
             {
+                Tag = false,
                 KeyWord = keyword,
                 Total = totalPosts.Count,
                 MostPopularPosts = mostPopularPosts,
@@ -268,13 +282,27 @@ namespace Stories.Services
                 footerPosts.Add(footerPost);
             }
 
+            // get TAGCLOUD
+            var postTL = posts.OrderBy(r => Guid.NewGuid()).Take(7);
+            var tl = new List<string>();
+            foreach (var post in postTL)
+            {
+                var tag = post.Tag.Split(" "); ;
+                foreach(var t in tag)
+                {
+                    tl.Add(t);
+                }
+            }
+            tl = tl.OrderBy(r => Guid.NewGuid()).Take(7).ToList();
+
             // return
             return new LayoutResponse
             {
                 Categories = categories,
                 HotTopics = hotTopics,
                 DontMiss = dontMiss,
-                FooterPosts = footerPosts
+                FooterPosts = footerPosts,
+                TagCloud = tl
             };
         }
 

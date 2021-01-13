@@ -13,6 +13,7 @@ namespace Stories.VM.Response
         public List<Post> DontMiss { get; set; }
         public Ad Ad { get; set; }
         public List<FooterPost> FooterPosts { get; set; }
+        public List<string> TagCloud { get; set; }
     }
 
     public class HotTopic

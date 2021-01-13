@@ -10,5 +10,6 @@ namespace Stories.VM
     {
         public List<Post> MostPopularPosts { get; set; }
         public List<Post> RandomCategoryPosts { get; set; }
+        public List<string> HotTags { get; set; }
     }
 }

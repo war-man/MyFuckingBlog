@@ -36,6 +36,7 @@
                 var dontMiss = data.dontMiss;
                 var ad = data.ad;
                 var footerPosts = data.footerPosts;
+                var tagCloud = data.tagCloud;
 
                 var html = ' <li class="menu-item-has-children"><a href="/"><i class="elegant-icon icon_house_alt mr-5"></i>Trang chủ</a></li>';
                 var html2 = "";
@@ -43,6 +44,7 @@
                 var html4 = "";
                 var html5 = "";
                 var footer = "";
+                var html6 = "";
 
                 $(categories).each(function (index, cat) {
                     html += '<li><a href="/Blog/Category/' + cat.id + '">' + cat.name + '</a></li>';
@@ -121,12 +123,17 @@
                           + '</div>';
                 });
 
+                $(tagCloud).each(function (index, tag) {
+                    html6 += '<a class="tag-cloud-link" href="/Blog/Tag/' + tag + '">' + tag + ' </a>';
+                });
+
                 $("#desktop-menu").html(html);
                 $(".mobile_menu .slicknav_menu .menu-item-has-children:nth-child(2) ul").html(html2);
                 $("#hot-topics").html(html3);
                 $("#dont-miss").html(html4);
                 $("#footer-posts").html(html5);
                 $("#categoriesFooter").html(footer);
+                $(".tagcloud").html(html6);
 
                 $(".widget-ads a").attr("href", ad.link);
                 $(".widget-ads a img").attr("src", ad.imageLink);

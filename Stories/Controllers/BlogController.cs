@@ -56,7 +56,9 @@ namespace Stories.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Search(string keyword)
+        [Route("/{controller}/Search")]
+        [Route("/{controller}/Tag/{tag}")]
+        public async Task<IActionResult> Search(string keyword, string tag)
         {
             var model = await _blogService.GetSearchResultPosts(keyword, DateTime.Now.Year, 4);
             return View(model);
