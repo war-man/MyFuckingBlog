@@ -65,7 +65,7 @@
                 });
 
                 $(hotTopics).each(function (index, ht) {
-                    html3 += '<li class="cat-item cat-item-6"><a href="/Category/' + ht.id + '">' + ht.name + '</a> <span class="post-count">' + ht.postCount + '</span></li>';
+                    html3 += '<li class="cat-item cat-item-6"><a href="/Blog/Category/' + ht.id + '">' + ht.name + '</a> <span class="post-count">' + ht.postCount + '</span></li>';
                 });
 
                 $(dontMiss).each(function (index, dm) {
