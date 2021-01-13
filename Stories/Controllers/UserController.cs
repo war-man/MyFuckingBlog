@@ -64,7 +64,7 @@ namespace Stories.Controllers
                     new AuthenticationProperties
                     {
                         IsPersistent = true,
-                        ExpiresUtc = DateTime.UtcNow.AddMinutes(20)
+                        ExpiresUtc = DateTime.UtcNow.AddMinutes(180)
                     });
 
                 return RedirectToAction("Index", "Blog");
@@ -109,5 +109,50 @@ namespace Stories.Controllers
         {
             return Json(true);
         }
+
+        #region API
+        [HttpPost]
+        public async Task<JsonResult> GoogleOauth(string email)
+        {
+            var user = await _userService.GoogleAuthenticateUser(email);
+
+            if (user != null)
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim("Id", user.Id.ToString()),
+                    new Claim("Username", user.Username),
+                    new Claim("Name", user.Name),
+                    new Claim("IsAuthor", user.IsAuthor ? "true" : "false"),
+                    new Claim(ClaimTypes.Role, user.IsAuthor ? "Admin" : "User")
+                };
+
+                var claimsIdentity = new ClaimsIdentity(
+                    claims,
+                    CookieAuthenticationDefaults.AuthenticationScheme);
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddMinutes(180)
+                    });
+
+                return Json(new
+                {
+                    status = 200,
+                    message = "ok"
+                });
+            }
+
+            return Json(new
+            {
+                status = 404,
+                message = "Email chưa được đăng ký!"
+            });
+        }
+        #endregion
     }
 }

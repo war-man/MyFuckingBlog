@@ -162,16 +162,16 @@
     };
 
     // Off canvas sidebar
-    var OffCanvas = function() {
+    var OffCanvas = function () {
         $('#off-canvas-toggle').on('click', function() {
-            $('body').toggleClass("canvas-opened");
+            $('html, body').toggleClass("canvas-opened");
         });
 
         $('.dark-mark').on('click', function() {
-            $('body').removeClass("canvas-opened");
+            $('html, body').removeClass("canvas-opened");
         });
         $('.off-canvas-close').on('click', function() {
-            $('body').removeClass("canvas-opened");
+            $('html, body').removeClass("canvas-opened");
         });
     };
 

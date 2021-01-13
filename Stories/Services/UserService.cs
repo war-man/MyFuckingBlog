@@ -17,6 +17,7 @@ namespace Stories.Services
     public interface IUserService
     {
         Task<User> AuthenticateUser(LogInRequest login);
+        Task<User> GoogleAuthenticateUser(string email);
         Task<User> GetUserInfo(string username);
     }
 
@@ -35,6 +36,13 @@ namespace Stories.Services
         public async Task<User> AuthenticateUser(LogInRequest login)
         {
             var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == login.Username && x.Password == login.Password);
+
+            return user;
+        }
+
+        public async Task<User> GoogleAuthenticateUser(string email)
+        {
+            var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Email == email);
 
             return user;
         }

@@ -742,6 +742,12 @@ button.search-icon {
 		left: unset;
 	}
 
+.canvas-opened {
+	margin: 0;
+	height: 100%;
+	overflow: hidden
+}
+
 .canvas-opened #sidebar-wrapper {
 	width: 350px;
 	-webkit-transition: all 0.2s ease;

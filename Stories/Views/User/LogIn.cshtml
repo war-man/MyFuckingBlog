@@ -14,8 +14,8 @@
                         <h3 class="mb-30 font-weight-900">Đăng nhập</h3>
                     </div>
                     <form method="POST" asp-controller="User" asp-action="Authentication">
-                        @{ 
-                            if(!string.IsNullOrEmpty(error))
+                        @{
+                            if (!string.IsNullOrEmpty(error))
                             {
                                 <div style="margin: 12px; color: red">
                                     <span>@error</span>
@@ -46,8 +46,9 @@
                     </div>
                     <ul class="btn-login list_none text-center mb-15">
                         <li><a href="#" class="btn btn-facebook"><i class="elegant-icon social_facebook  mr-5"></i>Facebook</a></li>
-                        <li><a href="#" class="btn btn-google"><i class="elegant-icon social_googleplus mr-5"></i>Google</a></li>
+                        <li><a class="btn btn-google"><i class="elegant-icon social_googleplus mr-5"></i>Google</a></li>
                     </ul>
+                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
                     <div class="text-muted text-center">Không có tài khoản? <a href="/Register">Đăng ký ngay</a></div>
                 </div>
             </div>
@@ -59,6 +60,7 @@
         $(document).ready(function () {
             $("main").addClass("bg-grey pt-80 pb-50");
             $("footer").toggleClass("bg-grey");
+            $(".g-signin2").hide();
 
             if ($.cookie('username') != "" && $.cookie('password') != "") {
                 $("#username").val($.cookie('username'));
@@ -75,6 +77,39 @@
                     $.cookie('password', $("#password").val(), { expires: 1 });
                 }
             });
+
+            $(".btn-google").click(function () {
+                $(".abcRioButton").trigger('click');
+            });
         });
+
+        function onSignIn(googleUser) {
+            var profile = googleUser.getBasicProfile();
+
+            //console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+            //console.log('Name: ' + profile.getName());
+            //console.log('Image URL: ' + profile.getImageUrl());
+            //console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+
+            $.ajax({
+                url: "/User/GoogleOauth",
+                method: "POST",
+                dataType: "json",
+                data: {
+                    email: profile.getEmail()
+                },
+                success: function (data) {
+                    if (data.status == 200) {
+                        window.location.replace("/");
+                    }
+                }
+            });
+        }
     </script>
 }
+
+<style>
+    .btn-google {
+        color: #fff !important;
+    }
+</style>

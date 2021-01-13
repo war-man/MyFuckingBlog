@@ -10,6 +10,7 @@
 
     <!-- Facebook meta tags  -->
     <meta property="fb:app_id" content="449245312768740" />
+    <meta name="google-signin-client_id" content="@Configuration["AppSetting:GoogleClientID"]">
     <meta property="og:type" content="article" />
     <meta property="og:site_name" content="@Configuration["AppSetting:HostURL"]">
     @RenderSection("meta", required: false)
@@ -81,42 +82,6 @@
                     </div>
                     <div class="col-md-9 col-xs-6 text-right header-top-right ">
                         <ul class="list-inline nav-topbar d-none d-md-inline">
-                            <li class="list-inline-item menu-item-has-children">
-                                <a href="#">Layouts</a>
-                                <ul class="sub-menu font-small">
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Pages</a>
-                                        <ul class="sub-menu font-small">
-                                            <li><a href="page-about.html.htm">About</a></li>
-                                            <li><a href="page-contact.html.htm">Contact</a></li>
-                                            <li><a href="page-typography.html.htm">Typography</a></li>
-                                            <li><a href="page-register.html.htm">Register</a></li>
-                                            <li><a href="page-login.html.htm">Login</a></li>
-                                            <li><a href="page-search.html.htm">Search</a></li>
-                                            <li><a href="page-author.html.htm">Author</a></li>
-                                            <li><a href="page-404.html.htm">404 page</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Category</a>
-                                        <ul class="sub-menu font-small">
-                                            <li><a href="category-list.html.htm">List layout</a></li>
-                                            <li><a href="category-grid.html.htm">Grid layout</a></li>
-                                            <li><a href="category-masonry.html.htm">Masonry layout</a></li>
-                                            <li><a href="category-big.html.htm">Big layout</a></li>
-                                        </ul>
-                                    </li>
-                                    <li class="menu-item-has-children">
-                                        <a href="#">Single post</a>
-                                        <ul class="sub-menu font-small">
-                                            <li><a href="single.html.htm">Default</a></li>
-                                            <li><a href="single-2.html.htm">Big image</a></li>
-                                            <li><a href="single-3.html.htm">Left image</a></li>
-                                            <li><a href="single-4.html.htm">With sidebar</a></li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
                             @{
                                 if (User.Identity.IsAuthenticated)
                                 {
@@ -129,7 +94,7 @@
                                                 <li><a href="/CreatePost">Tạo bài viết</a></li>
                                                 <li><a href="/PageSetting">Cài đặt blog</a></li>
                                             }
-                                            <li><a asp-action="LogOut" asp-controller="User">Đăng xuất</a></li>
+                                            <li><a asp-action="LogOut" asp-controller="User" id="btnLogOut">Đăng xuất</a></li>
                                         </ul>
                                     </li>
                                 }
@@ -385,6 +350,8 @@
     </footer>
     <!-- End Footer -->
     <div class="dark-mark"></div>
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/vi_VN/sdk.js#xfbml=1&version=v9.0&appId=449245312768740&autoLogAppEvents=1" nonce="Fx8ldU9x"></script>
 
     <!-- Vendor JS-->
     <script src="~/js/vendor/modernizr-3.5.0.min.js"></script>
@@ -410,6 +377,7 @@
     <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
 
     <script src="https://www.google.com/recaptcha/api.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=onLoad" async defer></script>
     <!-- NewsBoard JS -->
     <script src="~/js/main.js"></script>
     @RenderSection("Scripts", required: false)
@@ -431,6 +399,23 @@
 
                     $(".insta-feed").hide().html(html).fadeIn('slow');
                 }
+            });
+
+            $("#btnLogOut").click(function () {
+                signOut();
+            });
+        }
+
+        function signOut() {
+            var auth2 = gapi.auth2.getAuthInstance();
+            auth2.signOut().then(function () {
+                console.log('User signed out.');
+            });
+        }
+
+        function onLoad() {
+            gapi.load('auth2', function () {
+                gapi.auth2.init();
             });
         }
     </script>
