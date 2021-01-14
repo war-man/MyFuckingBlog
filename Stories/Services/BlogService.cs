@@ -25,6 +25,7 @@ namespace Stories.Services
         Task<List<PostResponse>> GetPostByCategory(string categoryName, int pageNumber);
         Task<HomePageViewModel> GetHomePagePosts(int year, int take);
         Task<SearchResultViewModel> GetSearchResultPosts(string keyword, int year, int take);
+        Task<List<PostResponse>> GetSearchResultPosts(string keyword, int pageNumber);
         Task<List<PostResponse>> GetLatestPosts(int pageNumber);
         Task<Post> CreatePost(CreatePostRequest request);
         Task<LayoutResponse> GetLayoutResponse();
@@ -79,19 +80,7 @@ namespace Stories.Services
             var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == username);
             var posts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.AuthorId == user.Id).OrderByDescending(x => x.CreatedDate).Skip(skip).Take(take).ToListAsync();
 
-            var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
-
-            var postR = new List<PostResponse>();
-
-            foreach (var post in posts)
-            {
-                var pr = _mapper.Map<PostResponse>(post);
-                pr.Category = cats.Find(x => x.Id == post.CategoryId).Name;
-                pr.CategoryColor = cats.Find(x => x.Id == post.CategoryId).Color;
-                postR.Add(pr);
-            }
-
-            return postR;
+            return await ConvertToPostResponse(posts);
         }
 
         public async Task<List<PostResponse>> GetPostByCategory(string categoryId, int pageNumber)
@@ -101,18 +90,7 @@ namespace Stories.Services
 
             var posts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CategoryId == categoryId).OrderByDescending(x => x.CreatedDate).Skip(skip).Take(take).ToListAsync();
 
-            var postR = new List<PostResponse>();
-
-            var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
-            foreach (var post in posts)
-            {
-                var pr = _mapper.Map<PostResponse>(post);
-                pr.Category = cats.Find(x => x.Id == post.CategoryId).Name;
-                pr.CategoryColor = cats.Find(x => x.Id == post.CategoryId).Color;
-                postR.Add(pr);
-            }
-
-            return postR;
+            return await ConvertToPostResponse(posts);
         }
 
         public async Task<BlogSingleViewModel> GetPost(string link)
@@ -122,16 +100,6 @@ namespace Stories.Services
             var morePosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToListAsync();
 
             var relatedPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CategoryId == post.CategoryId && x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToListAsync();
-            var postR = new List<PostResponse>();
-
-            var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
-            foreach (var p in relatedPosts)
-            {
-                var pr = _mapper.Map<PostResponse>(p);
-                pr.Category = cats.Find(x => x.Id == p.CategoryId).Name;
-                pr.CategoryColor = cats.Find(x => x.Id == p.CategoryId).Color;
-                postR.Add(pr);
-            }
 
             var vm = _mapper.Map<BlogSingleViewModel>(post);
             vm.AuthorName = user.Name;
@@ -139,7 +107,7 @@ namespace Stories.Services
             vm.AuthorAvatar = user.Avatar;
             vm.AuthorDescription = user.Description;
             vm.MorePosts = morePosts;
-            vm.RelatedPosts = postR;
+            vm.RelatedPosts = await ConvertToPostResponse(relatedPosts);
 
             post.Views += 1;
             await _unitOfWork.CommitAsync();
@@ -167,9 +135,16 @@ namespace Stories.Services
 
             return new HomePageViewModel
             {
+                FeaturedPosts = await ConvertToPostResponse(await GetFeaturedPosts()),
                 MostPopularPosts = mostPopularPosts,
                 HotTags = ht
             };
+        }
+
+        public async Task<List<Post>> GetFeaturedPosts()
+        {
+            var featuredPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.Featured).OrderByDescending(x => x.CreatedDate).Take(12).ToListAsync();
+            return featuredPosts;
         }
 
         public async Task<SearchResultViewModel> GetSearchResultPosts(string keyword, int year, int take)
@@ -188,17 +163,9 @@ namespace Stories.Services
                 totalPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(predicate).OrderByDescending(x => x.CreatedDate).ToListAsync();
 
                 // lấy 8 bài viết đầu tiên
-                var searchResultPosts = totalPosts.Take(8);
+                var searchResultPosts = totalPosts.Take(8).ToList();
 
-                var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
-
-                foreach (var post in searchResultPosts)
-                {
-                    var pr = _mapper.Map<PostResponse>(post);
-                    pr.Category = cats.Find(x => x.Id == post.CategoryId).Name;
-                    pr.CategoryColor = cats.Find(x => x.Id == post.CategoryId).Color;
-                    postR.Add(pr);
-                }
+                postR = await ConvertToPostResponse(searchResultPosts);
             }
 
             var mostPopularPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CreatedDate.Year == year).OrderByDescending(x => x.Views).Take(take).ToListAsync();
@@ -213,27 +180,45 @@ namespace Stories.Services
             };
         }
 
+        public async Task<List<PostResponse>> GetSearchResultPosts(string keyword, int pageNumber)
+        {
+            var totalPosts = new List<Post>();
+            var postR = new List<PostResponse>();
+
+            var take = 8;
+
+            var skip = (pageNumber - 1) * take;
+
+            if (!string.IsNullOrEmpty(keyword))
+            {
+                var lkw = keyword.Split(" ");
+
+                var predicate = PredicateBuilder.New<Post>();
+                foreach (string searchTerm in lkw)
+                    predicate = predicate.Or(x => x.Title.ToLower().Contains(searchTerm.ToLower()));
+
+                totalPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(predicate).OrderByDescending(x => x.CreatedDate).ToListAsync();
+
+                // lấy 8 bài viết đầu tiên
+                var searchResultPosts = totalPosts.Skip(skip).Take(take).ToList();
+
+                postR = await ConvertToPostResponse(searchResultPosts);
+            }
+
+            return postR;
+        }
+
         public async Task<List<PostResponse>> GetLatestPosts(int pageNumber)
         {
             var postEach = 4;
 
             var skip = (pageNumber - 1) * postEach;
 
-            var postR = new List<PostResponse>();
+            var featuredPosts = await GetFeaturedPosts();
 
-            var posts = await _unitOfWork.GetRepository<Post>().GetAll().OrderByDescending(x => x.CreatedDate).Skip(skip).Take(postEach).ToListAsync();
+            var posts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => !featuredPosts.Select(y => y.Id).Contains(x.Id)).OrderByDescending(x => x.CreatedDate).Skip(skip).Take(postEach).ToListAsync();
 
-            var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
-
-            foreach (var post in posts)
-            {
-                var pr = _mapper.Map<PostResponse>(post);
-                pr.Category = cats.Find(x => x.Id == post.CategoryId).Name;
-                pr.CategoryColor = cats.Find(x => x.Id == post.CategoryId).Color;
-                postR.Add(pr);
-            }
-
-            return postR;
+            return await ConvertToPostResponse(posts);
         }
 
         public async Task<Post> CreatePost(CreatePostRequest request)
@@ -254,6 +239,9 @@ namespace Stories.Services
             // get Categories
             var categories = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
             var posts = await _unitOfWork.GetRepository<Post>().GetAll().ToListAsync();
+
+            // get Suggested Categories
+            var suggestedCategories = categories.OrderBy(r => Guid.NewGuid()).Take(3).ToList();
 
             // get Hot Topics
             var hotTopics = new List<HotTopic>();
@@ -299,6 +287,7 @@ namespace Stories.Services
             return new LayoutResponse
             {
                 Categories = categories,
+                SuggestedCategories = suggestedCategories,
                 HotTopics = hotTopics,
                 DontMiss = dontMiss,
                 FooterPosts = footerPosts,
@@ -319,6 +308,20 @@ namespace Stories.Services
         }
 
         #region Helper
+        private async Task<List<PostResponse>> ConvertToPostResponse(List<Post> posts)
+        {
+            var postR = new List<PostResponse>();
+            var cats = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
+            foreach (var post in posts)
+            {
+                var pr = _mapper.Map<PostResponse>(post);
+                pr.Category = cats.Find(x => x.Id == post.CategoryId).Name;
+                pr.CategoryColor = cats.Find(x => x.Id == post.CategoryId).Color;
+                postR.Add(pr);
+            }
+            return postR;
+        }
+
         private int CalculateReadMinutes(string content)
         {
             int length = content.Length;

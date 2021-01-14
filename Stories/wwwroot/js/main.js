@@ -32,6 +32,7 @@
             dataType: "json",
             success: function (data) {
                 var categories = data.categories;
+                var suggestedCategories = data.suggestedCategories;
                 var hotTopics = data.hotTopics;
                 var dontMiss = data.dontMiss;
                 var ad = data.ad;
@@ -45,6 +46,7 @@
                 var html5 = "";
                 var footer = "";
                 var html6 = "";
+                var html7 = "";
 
                 $(categories).each(function (index, cat) {
                     html += '<li><a href="/Blog/Category/' + cat.id + '">' + cat.name + '</a></li>';
@@ -62,6 +64,22 @@
                            + '</div>';
 
                     if (index == 8) return;
+                });
+
+                $(suggestedCategories).each(function (index, cat) {
+                    html7 += '<div class="col-lg-4 col-md-6">'
+                          +      '<div class="d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5 mb-30">'
+                          +          '<div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">'
+                          +              '<a class="color-white" href="/Blog/Category/' + cat.id + '">'
+                          +                  '<img src="' + cat.thumbLink + '" alt="">'
+                          +              '</a>'
+                          +          '</div>'
+                          +              '<div class="post-content media-body">'
+                          +                  '<h6> <a href="/Blog/Category/' + cat.id + '">' + cat.name + '</a> </h6>'
+                          +                  '<p class="text-muted font-small">' + cat.description + '</p>'
+                          +              '</div>'
+                          +          '</div>'
+                          +  '</div>';
                 });
 
                 $(hotTopics).each(function (index, ht) {
@@ -134,6 +152,7 @@
                 $("#footer-posts").html(html5);
                 $("#categoriesFooter").html(footer);
                 $(".tagcloud").html(html6);
+                $("#sugg-categories").html(html7);
 
                 $(".widget-ads a").attr("href", ad.link);
                 $(".widget-ads a img").attr("src", ad.imageLink);

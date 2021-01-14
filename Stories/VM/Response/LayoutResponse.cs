@@ -9,6 +9,7 @@ namespace Stories.VM.Response
     public class LayoutResponse
     {
         public List<Category> Categories { get; set; }
+        public List<Category> SuggestedCategories { get; set; }
         public List<HotTopic> HotTopics { get; set; }
         public List<Post> DontMiss { get; set; }
         public Ad Ad { get; set; }

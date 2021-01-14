@@ -171,57 +171,18 @@
                     <div class="col-12 font-small suggested-area">
                         <h5 class="suggested font-heading mb-20 text-muted"> <strong>Từ khóa gợi ý:</strong></h5>
                         <ul class="list-inline d-inline-block">
-                            <li class="list-inline-item"><a href="category.html.htm">World</a></li>
-                            <li class="list-inline-item"><a href="category.html.htm">American</a></li>
-                            <li class="list-inline-item"><a href="category.html.htm">Opinion</a></li>
-                            <li class="list-inline-item"><a href="category.html.htm">Tech</a></li>
-                            <li class="list-inline-item"><a href="category.html.htm">Science</a></li>
-                            <li class="list-inline-item"><a href="category.html.htm">Books</a></li>
-                            <li class="list-inline-item"><a href="category.html.htm">Travel</a></li>
-                            <li class="list-inline-item"><a href="category.html.htm">Business</a></li>
+                            <li class="list-inline-item"><a href="/Blog/Search?keyword=Cyberpunk">Cyberpunk</a></li>
+                            <li class="list-inline-item"><a href="/Blog/Search?keyword=Valorant">Valorant</a></li>
+                            <li class="list-inline-item"><a href="/Blog/Search?keyword=Marvel">Marvel</a></li>
+                            <li class="list-inline-item"><a href="/Blog/Search?keyword=Vans">Vans</a></li>
+                            <li class="list-inline-item"><a href="/Blog/Search?keyword=Call+of+Duty">Call of Duty</a></li>
+                            <li class="list-inline-item"><a href="/Blog/Search?keyword=Qlimax">Qlimax</a></li>
+                            <li class="list-inline-item"><a href="/Blog/Search?keyword=RTX">RTX</a></li>
+                            <li class="list-inline-item"><a href="/Blog/Search?keyword=Hardstyle">Hardstyle</a></li>
                         </ul>
                     </div>
                 </div>
-                <div class="row mt-80">
-                    <div class="col-lg-4">
-                        <div class="d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5 mb-30">
-                            <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
-                                <a class="color-white" href="single.html.htm">
-                                    <img src="~/imgs/news/thumb-2.jpg" alt="">
-                                </a>
-                            </div>
-                            <div class="post-content media-body">
-                                <h6> <a href="category.html.htm">Travel Tips</a> </h6>
-                                <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-6">
-                        <div class="d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5 mb-30">
-                            <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
-                                <a class="color-white" href="single.html.htm">
-                                    <img src="~/imgs/news/thumb-4.jpg" alt="">
-                                </a>
-                            </div>
-                            <div class="post-content media-body">
-                                <h6> <a href="category.html.htm">Lifestyle</a> </h6>
-                                <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4  col-md-6">
-                        <div class="d-flex bg-grey has-border p-25 hover-up-2 transition-normal border-radius-5 mb-30">
-                            <div class="post-thumb post-thumb-64 d-flex mr-15 border-radius-5 img-hover-scale overflow-hidden">
-                                <a class="color-white" href="single.html.htm">
-                                    <img src="~/imgs/news/thumb-3.jpg" alt="">
-                                </a>
-                            </div>
-                            <div class="post-content media-body">
-                                <h6> <a href="category.html.htm">Hotel Review</a> </h6>
-                                <p class="text-muted font-small">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                            </div>
-                        </div>
-                    </div>
+                <div class="row mt-80" id="sugg-categories">
                 </div>
             </div>
         </div>
@@ -397,6 +358,19 @@
             $("#btnLogOut").click(function () {
                 signOut();
             });
+        }
+
+        function ConvertToPostDate(date) {
+            var tmpDate = '';
+            var postDate = '';
+
+            var monthString = ["giêng", "hai", "ba", "tư", "năm", "sáu", "bảy", "tám", "chín", "mười", "mười một", "mười hai"];
+
+            tmpDate = date.split("T")[0].split("-");
+            postDate = tmpDate[2] + " Tháng " + monthString[parseInt(tmpDate[1]) - 1];
+
+
+            return postDate;
         }
 
         function signOut() {

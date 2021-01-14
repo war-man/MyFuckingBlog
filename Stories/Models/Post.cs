@@ -42,14 +42,17 @@ namespace Stories.Models
         [Column("views")]
         public int Views { get; set; }
 
+        [Column("status")]
+        public bool Status { get; set; }
+
         [Column("created_date")]
         public DateTime CreatedDate { get; set; }
 
         [Column("updated_date")]
         public DateTime UpdatedDate { get; set; }
 
-        [Column("status")]
-        public bool Status { get; set; }
+        [Column("featured")]
+        public bool Featured { get; set; }
 
         public Post()
         {
@@ -58,6 +61,7 @@ namespace Stories.Models
             CreatedDate = DateTime.Now;
             UpdatedDate = DateTime.Now;
             Status = true;
+            Featured = false;
         }
     }
 }

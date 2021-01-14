@@ -43,7 +43,19 @@
 
         <div class="form-group">
             <label for="exampleFormControlFile1">Type</label>
-            <input type="text" id="type" class="form-control" />
+            <select id="type" class="form-control">
+                <option>Không</option>
+                <option value="star">Star</option>
+                <option value="camera">Camera</option>
+                <option value="image">Image</option>
+                <option value="headphone">Headphone</option>
+                <option value="heart">Heart</option>
+            </select>
+        </div>
+
+        <div class="form-check" style="margin-bottom: 1rem">
+            <input type="checkbox" class="form-check-input" id="featured">
+            <label class="form-check-label" for="featured">Tiêu điểm</label>
         </div>
 
         <button type="button" class="btn btn-primary" id="createPost">Submit</button>
@@ -55,6 +67,14 @@
 
 @section Scripts {
     <script>
+        //var editor = CodeMirror.fromTextArea(document.getElementById('content'), {
+        //    lineNumbers: true,
+        //    mode: "htmlmixed",
+        //    htmlMode: true,
+        //    tabMode: 'indent',
+        //    autoCloseTags: true
+        //});
+
         $(document).ready(function () {
             $('#tag').tagsinput();
             LoadCategories();
@@ -75,8 +95,8 @@
                     processData: false,
                     success: function (data) {
                         iziToast.success({
-                            title: '',
-                            message: 'Upload ảnh thành công, đường dẫn ' + data.secure_url,
+                            title: 'Upload ảnh thành công',
+                            message: 'Đường dẫn: ' + data.secure_url,
                         });
 
                         $("#cloudinary-fileupload").val(""); 
@@ -87,8 +107,8 @@
                     },
                     error: function (data) {
                         iziToast.error({
-                            title: '',
-                            message: 'Upload ảnh không thành công, lỗi ' + data,
+                            title: 'Upload ảnh không thành công',
+                            message: 'Lỗi: ' + data.responseJSON.error.message,
                         });
                     }
                 });
@@ -109,7 +129,8 @@
                         CategoryId: $("#category-id").val(),
                         ImageLink: $("#image-link").val(),
                         Tag: $("#tag").tagsinput('items').join(" "),
-                        Type: $("#type").val()
+                        Type: $("#type").val(),
+                        Featured: $('#featured').is(":checked")
                     };
 
                     $.ajax({

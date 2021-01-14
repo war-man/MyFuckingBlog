@@ -154,6 +154,13 @@ namespace Stories.Controllers
             var post = await _blogService.GetPostByCategory(categoryId, pageNumber);
             return Json(post);
         }
+
+        [HttpGet("/{controller}/GetSearchResultPosts")]
+        public async Task<JsonResult> GetSearchResultPosts(string keyword, int pageNumber)
+        {
+            var post = await _blogService.GetSearchResultPosts(keyword, pageNumber);
+            return Json(post);
+        }
         #endregion
     }
 }

@@ -25,7 +25,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="post-module-3">
-                    <div class="loop-list loop-list-style-1">
+                    <div class="loop-list loop-list-style-1" id="search-result-posts">
                         @foreach (var post in Model.SearchResultPosts)
                         {
                             <article class="hover-up-2 transition-normal wow fadeInUp animated">
@@ -137,7 +137,87 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
+            var PAGENOW = 1;
+            var PAGEMAX = $("ul.pagination.justify-content-start li").length - 2;
             LoadInstagramPost();
+
+            $(".page-link").click(function () {
+                if (!$(this).find("i").length) {
+                    PAGENOW = parseInt($(this).html())
+                }
+                else {
+                    var i = $(this).find("i");
+                    if (i.hasClass("arrow_right")) {
+                        if (PAGENOW != PAGEMAX) {
+                            PAGENOW++;
+                        }
+                    }
+                    else {
+                        if (PAGENOW != 1) {
+                            PAGENOW--;
+                        }
+                    }
+                }
+
+                LoadSearchResultPosts(PAGENOW);
+                $('html, body').animate({
+                    scrollTop: $(".breadcrumb").offset().top - 75
+                }, 1000);
+            });
         });
+
+        function LoadSearchResultPosts(PAGENOW) {
+            $.ajax({
+                url: "/Blog/GetSearchResultPosts",
+                method: "GET",
+                dataType: "json",
+                data: {
+                    keyword: '@Model.KeyWord',
+                    pageNumber: PAGENOW
+                },
+                success: function (data) {
+                    var html = '';
+
+                    $(data).each(function (index, post) {
+                        html += '<article class="hover-up-2 transition-normal wow fadeInUp animated">'
+                            + '<div class="row mb-40 list-style-2">'
+                            + '<div class="col-md-4">'
+                            + '<div class="post-thumb position-relative border-radius-5">'
+                            + '<div class="img-hover-slide border-radius-5 position-relative" style="background-image: url(' + post.imageLink + ')">'
+                            + '<a class="img-link" href="/Blog/Single/' + post.link + '"></a>'
+                            + '</div>'
+                            + '<ul class="social-share">'
+                            + '<li><a href="#"><i class="elegant-icon social_share"></i></a></li>'
+                            + '<li><a class="fb" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/' + post.link + '" title="Chia sẻ lên Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>'
+                            + '<li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>'
+                            + '<li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>'
+                            + '</ul>'
+                            + '</div>'
+                            + '</div>'
+                            + '<div class="col-md-8 align-self-center">'
+                            + '<div class="post-content">'
+                            + '<div class="entry-meta meta-0 font-small mb-10">'
+                            + '<a href="/Blog/Category/' + post.categoryId + '"><span class="post-cat ' + post.categoryColor + '">' + post.category + '</span></a>'
+                            + '</div>'
+                            + '<h5 class="post-title font-weight-900 mb-20">'
+                            + '<a href="/Blog/Single/' + post.link + '">' + post.title + '</a>'
+                            + '</h5>'
+                            + '<div class="entry-meta meta-1 float-left font-x-small text-uppercase">'
+                            + '<span class="post-on">' + ConvertToPostDate(post.createdDate) + '</span>'
+                            + '<span class="time-reading has-dot">' + post.readMinute + ' phút đọc</span>'
+                            + '<span class="post-by has-dot">' + post.views + ' lượt xem</span>'
+                            + '</div>'
+                            + '</div>'
+                            + '</div>'
+                            + '</div>'
+                            + '</article>';
+                    });
+
+                    $("#search-result-posts").html(html);
+                    $(".page-item").removeClass("active");
+                    $(".page-link:contains(" + PAGENOW + ")").parent().addClass("active");
+                }
+            });
+        }
     </script>
 }
