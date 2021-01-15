@@ -24,7 +24,7 @@ namespace Stories.Services
         Task<List<PostResponse>> GetPostByAuthor(string username, int pageNumber);
         Task<List<PostResponse>> GetPostByCategory(string categoryName, int pageNumber);
         Task<HomePageViewModel> GetHomePagePosts(int year, int take);
-        Task<SearchResultViewModel> GetSearchResultPosts(string keyword, int year, int take);
+        Task<SearchResultViewModel> GetSearchResultPosts(string keyword, string tag, int year, int take);
         Task<List<PostResponse>> GetSearchResultPosts(string keyword, int pageNumber);
         Task<List<PostResponse>> GetLatestPosts(int pageNumber);
         Task<Post> CreatePost(CreatePostRequest request);
@@ -95,17 +95,24 @@ namespace Stories.Services
 
         public async Task<BlogSingleViewModel> GetPost(string link)
         {
-            var post = await _unitOfWork.GetRepository<Post>().FindAsync(x => x.Link == link);
-            var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Id == post.AuthorId);
-            var morePosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToListAsync();
+            var posts = await _unitOfWork.GetRepository<Post>().GetAll().ToListAsync();
 
-            var relatedPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CategoryId == post.CategoryId && x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToListAsync();
+
+            var post = posts.First(x => x.Link == link);
+            var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Id == post.AuthorId);
+
+            var authorPostCount = posts.Where(x => x.AuthorId == user.Id).Count();
+
+            var morePosts = posts.Where(x => x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToList();
+
+            var relatedPosts = posts.Where(x => x.CategoryId == post.CategoryId && x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToList();
 
             var vm = _mapper.Map<BlogSingleViewModel>(post);
             vm.AuthorName = user.Name;
             vm.AuthorUsername = user.Username;
             vm.AuthorAvatar = user.Avatar;
             vm.AuthorDescription = user.Description;
+            vm.AuthorPostCount = authorPostCount;
             vm.MorePosts = morePosts;
             vm.RelatedPosts = await ConvertToPostResponse(relatedPosts);
 
@@ -147,7 +154,7 @@ namespace Stories.Services
             return featuredPosts;
         }
 
-        public async Task<SearchResultViewModel> GetSearchResultPosts(string keyword, int year, int take)
+        public async Task<SearchResultViewModel> GetSearchResultPosts(string keyword, string tag, int year, int take)
         {
             var totalPosts = new List<Post>();
             var postR = new List<PostResponse>();
@@ -167,13 +174,23 @@ namespace Stories.Services
 
                 postR = await ConvertToPostResponse(searchResultPosts);
             }
+            else if (!string.IsNullOrEmpty(tag))
+            {
+                totalPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.Tag.ToLower().Contains(tag.ToLower())).OrderByDescending(x => x.CreatedDate).ToListAsync();
+
+                // lấy 8 bài viết đầu tiên
+                var searchResultPosts = totalPosts.Take(8).ToList();
+
+                postR = await ConvertToPostResponse(searchResultPosts);
+            }
 
             var mostPopularPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CreatedDate.Year == year).OrderByDescending(x => x.Views).Take(take).ToListAsync();
             
             return new SearchResultViewModel
             {
-                Tag = false,
+                Tag = !string.IsNullOrEmpty(tag),
                 KeyWord = keyword,
+                Hashtag = tag,
                 Total = totalPosts.Count,
                 MostPopularPosts = mostPopularPosts,
                 SearchResultPosts = postR

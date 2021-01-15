@@ -11,6 +11,7 @@ namespace Stories.VM
     {
         public bool Tag { get; set; }
         public string KeyWord { get; set; }
+        public string Hashtag { get; set; }
         public int Total { get; set; }
         public List<Post> MostPopularPosts { get; set; }
         public List<PostResponse> SearchResultPosts { get; set; }

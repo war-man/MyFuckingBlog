@@ -25,5 +25,15 @@ namespace Stories.Models
         public string Description { get; set; }
         [Column("is_author")]
         public bool IsAuthor { get; set; }
+        [Column("created_date")]
+        public DateTime CreatedDate { get; set; }
+
+        public User()
+        {
+            Id = new Guid();
+            IsAuthor = false;
+            Description = "";
+            CreatedDate = DateTime.Now;
+        }
     }
 }

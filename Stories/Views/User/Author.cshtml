@@ -2,7 +2,7 @@
 @using Microsoft.Extensions.Configuration
 @inject IConfiguration Configuration
 @{
-    ViewData["Title"] = "Tác giả " + Model.Name;
+    ViewData["Title"] = (Model.IsAuthor ? "Tác giả " : "Người dùng ") + Model.Name;
     Layout = "~/Views/Shared/_Layout.cshtml";
     var MostPopularPosts = ViewBag.MostPopularPost as List<Post>;
     var Count = (ViewBag.Count % 8 > 1) ? ViewBag.Count / 8 + 1 : ViewBag.Count / 8;
@@ -20,7 +20,7 @@
                     <h3 class="font-weight-900">
                         <span class="vcard author"><span class="fn"><a href="/Author/@Model.Username" title="Posts by @Model.Name" rel="author">@Model.Name</a></span></span>
                     </h3>
-                    <h5 class="text-muted">Về tác giả</h5>
+                    <h5 class="text-muted">Về @(Model.IsAuthor ? "tác giả" : "người dùng")</h5>
                     <div class="author-description text-muted">
                         @Model.Description
                     </div>
@@ -36,37 +36,40 @@
     </div>
     <div class="row">
         <div class="col-lg-8">
-            <div class="post-module-2">
-                <div class="widget-header-2 position-relative mb-30 wow fadeInUp animated">
-                    <h5 class="mt-5 mb-30">Bài viết bởi @Model.Name</h5>
-                </div>
-                <div class="loop-list loop-list-style-1" id="divHead">
-                    <div class="row" id="author-post-page-1">
+            @if (Model.IsAuthor)
+            {
+                <div class="post-module-2">
+                    <div class="widget-header-2 position-relative mb-30 wow fadeInUp animated">
+                        <h5 class="mt-5 mb-30">Bài viết bởi @Model.Name</h5>
+                    </div>
+                    <div class="loop-list loop-list-style-1" id="divHead">
+                        <div class="row" id="author-post-page-1">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="post-module-3">
-                <div class="loop-list loop-list-style-1" id="authorPosts">
+                <div class="post-module-3">
+                    <div class="loop-list loop-list-style-1" id="authorPosts">
+                    </div>
                 </div>
-            </div>
-            <div class="pagination-area mb-30 wow fadeInUp animated">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-start">
-                        @if (Count > 1)
-                        {
-                            <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_left"></i></a></li>
-                        }
-                        @for (int i = 1; i <= Count; i++)
-                        {
-                            <li class="page-item@(i == 1 ? " active" : "")"><a class="page-link">@(i < 10 ? ("0" + i) : i + "")</a></li>
-                        }
-                        @if (Count > 1)
-                        {
-                            <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_right"></i></a></li>
-                        }
-                    </ul>
-                </nav>
-            </div>
+                <div class="pagination-area mb-30 wow fadeInUp animated">
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-start">
+                            @if (Count > 1)
+                            {
+                                <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_left"></i></a></li>
+                            }
+                            @for (int i = 1; i <= Count; i++)
+                            {
+                                <li class="page-item@(i == 1 ? " active" : "")"><a class="page-link">@(i < 10 ? ("0" + i) : i + "")</a></li>
+                            }
+                            @if (Count > 1)
+                            {
+                                <li class="page-item"><a class="page-link"><i class="elegant-icon arrow_right"></i></a></li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+            }
         </div>
         <div class="col-lg-4 primary-sidebar sticky-sidebar">
             <div class="widget-area">

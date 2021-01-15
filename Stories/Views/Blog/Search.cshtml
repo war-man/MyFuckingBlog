@@ -15,7 +15,7 @@
     <div class="container">
         <h2 class="font-weight-900">Kết quả tìm kiếm</h2>
         <div class="breadcrumb" style="text-transform: none;">
-            Tìm thấy <strong>@Model.Total</strong> bài viết cho từ khóa <strong>"@Model.KeyWord" </strong>
+            Tìm thấy <strong>@Model.Total</strong> bài viết cho @(Model.Tag ? "hashtag" : "từ khóa") <strong>"@(Model.Tag ? Model.Hashtag : Model.KeyWord)" </strong>
         </div>
         <div class="bt-1 border-color-1 mt-30 mb-50"></div>
     </div>

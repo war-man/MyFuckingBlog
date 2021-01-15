@@ -84,7 +84,10 @@ namespace Stories.Controllers
         [Route("/Register")]
         public IActionResult Register()
         {
-            return View();
+            bool isAuthenticated = User.Identity.IsAuthenticated;
+            if (!isAuthenticated)
+                return View();
+            return RedirectToAction("Index", "Blog");
         }
 
         [Route("/Author/{username}")]
@@ -102,12 +105,6 @@ namespace Stories.Controllers
         public IActionResult PageSetting()
         {
             return View();
-        }
-
-        [HttpPost]
-        public JsonResult RegisterAccount(RegisterAccountRequest request)
-        {
-            return Json(true);
         }
 
         #region API
@@ -151,6 +148,79 @@ namespace Stories.Controllers
             {
                 status = 404,
                 message = "Email chưa được đăng ký!"
+            });
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> RegisterAccount(RegisterAccountRequest request)
+        {
+            var user = await _userService.RegisterAccount(request);
+
+            if (user != null)
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim("Id", user.Id.ToString()),
+                    new Claim("Username", user.Username),
+                    new Claim("Name", user.Name),
+                    new Claim("IsAuthor", user.IsAuthor ? "true" : "false"),
+                    new Claim(ClaimTypes.Role, user.IsAuthor ? "Admin" : "User")
+                };
+
+                var claimsIdentity = new ClaimsIdentity(
+                    claims,
+                    CookieAuthenticationDefaults.AuthenticationScheme);
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddMinutes(180)
+                    });
+
+                return Json(new
+                {
+                    status = 200,
+                    message = "ok"
+                });
+            }
+            else if (user == null && request.UsingGoogleAuth)
+            {
+                user = await _userService.GoogleAuthenticateUser(request.Email);
+                var claims = new List<Claim>
+                {
+                    new Claim("Id", user.Id.ToString()),
+                    new Claim("Username", user.Username),
+                    new Claim("Name", user.Name),
+                    new Claim("IsAuthor", user.IsAuthor ? "true" : "false"),
+                    new Claim(ClaimTypes.Role, user.IsAuthor ? "Admin" : "User")
+                };
+
+                var claimsIdentity = new ClaimsIdentity(
+                    claims,
+                    CookieAuthenticationDefaults.AuthenticationScheme);
+
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity),
+                    new AuthenticationProperties
+                    {
+                        IsPersistent = true,
+                        ExpiresUtc = DateTime.UtcNow.AddMinutes(180)
+                    });
+
+                return Json(new
+                {
+                    status = 200,
+                    message = "ok"
+                });
+            }
+
+            return Json(new { 
+                status = 404,
+                message = "Tên tài khoản hoặc email đã tồn tại!"
             });
         }
         #endregion

@@ -19,6 +19,7 @@ namespace Stories.Services
         Task<User> AuthenticateUser(LogInRequest login);
         Task<User> GoogleAuthenticateUser(string email);
         Task<User> GetUserInfo(string username);
+        Task<User> RegisterAccount(RegisterAccountRequest request);
     }
 
     public class UserService : IUserService
@@ -27,10 +28,11 @@ namespace Stories.Services
         private readonly IMapper _mapper;
         private IConfiguration _config;
 
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper, IConfiguration config)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _config = config;
         }
 
         public async Task<User> AuthenticateUser(LogInRequest login)
@@ -52,6 +54,21 @@ namespace Stories.Services
             var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == username);
 
             return user;
+        }
+
+        public async Task<User> RegisterAccount(RegisterAccountRequest request)
+        {
+            var chk = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Username == request.Username || x.Email == request.Email);
+            if (chk == null)
+            {
+                var user = new User();
+                user = _mapper.Map<User>(request);
+
+                _unitOfWork.GetRepository<User>().Add(user);
+                await _unitOfWork.CommitAsync();
+                return user;
+            }
+            return null;
         }
 
         private string GenerateJSONWebToken(User userInfo)
