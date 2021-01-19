@@ -19,6 +19,8 @@ namespace Stories.AutoMapper
             CreateMap<Post, BlogSingleViewModel>();
             CreateMap<Category, HotTopic>();
             CreateMap<RegisterAccountRequest, User>();
+            CreateMap<Comment, CommentResponse>();
+            CreateMap<CreateCommentRequest, Comment>();
         }
     }
 }

@@ -161,6 +161,13 @@ namespace Stories.Controllers
             var post = await _blogService.GetSearchResultPosts(keyword, pageNumber);
             return Json(post);
         }
+
+        [HttpGet("/Comment/CreateComment")]
+        public async Task<JsonResult> CreateComment(CreateCommentRequest request)
+        {
+            //var post = await _blogService.GetSearchResultPosts(keyword, pageNumber);
+            return Json("ok");
+        }
         #endregion
     }
 }

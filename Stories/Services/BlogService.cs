@@ -96,16 +96,39 @@ namespace Stories.Services
         public async Task<BlogSingleViewModel> GetPost(string link)
         {
             var posts = await _unitOfWork.GetRepository<Post>().GetAll().ToListAsync();
+            var users = await _unitOfWork.GetRepository<User>().GetAll().ToListAsync();
 
 
             var post = posts.First(x => x.Link == link);
-            var user = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Id == post.AuthorId);
+            var user = users.Find(x => x.Id == post.AuthorId);
 
             var authorPostCount = posts.Where(x => x.AuthorId == user.Id).Count();
 
             var morePosts = posts.Where(x => x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToList();
 
             var relatedPosts = posts.Where(x => x.CategoryId == post.CategoryId && x.Id != post.Id).OrderBy(r => Guid.NewGuid()).Take(2).ToList();
+
+            // get Comments
+            var comments = await _unitOfWork.GetRepository<Comment>().GetAll().Where(x => x.PostId == post.Id).OrderByDescending(x => x.CreatedDate).ToListAsync();
+
+            var commentR = new List<CommentResponse>();
+
+            foreach (var comment in comments)
+            {
+                var cmt = _mapper.Map<CommentResponse>(comment);
+                var us = users.Find(x => x.Id == comment.UserId);
+                if (!string.IsNullOrEmpty(comment.UserId.ToString()))
+                {
+                    cmt.Username = us.Username;
+                    cmt.Avatar = us.Avatar;
+                    cmt.Name = us.Name;
+                }
+                else
+                {
+                    cmt.Avatar = "/imgs/authors/default-avatar.png";
+                }
+                commentR.Add(cmt);
+            }
 
             var vm = _mapper.Map<BlogSingleViewModel>(post);
             vm.AuthorName = user.Name;
@@ -115,6 +138,7 @@ namespace Stories.Services
             vm.AuthorPostCount = authorPostCount;
             vm.MorePosts = morePosts;
             vm.RelatedPosts = await ConvertToPostResponse(relatedPosts);
+            vm.Comments = commentR;
 
             post.Views += 1;
             await _unitOfWork.CommitAsync();
@@ -140,11 +164,36 @@ namespace Stories.Services
             }
             ht = ht.OrderBy(r => Guid.NewGuid()).Take(4).ToList();
 
+            // get Last Comments
+            var commentR = new List<CommentResponse>();
+            var posts = await _unitOfWork.GetRepository<Post>().GetAll().ToListAsync();
+            var user = await _unitOfWork.GetRepository<User>().GetAll().ToListAsync();
+            var lastComments = await _unitOfWork.GetRepository<Comment>().GetAll().OrderByDescending(x => x.CreatedDate).Take(4).ToListAsync();
+            foreach (var comment in lastComments)
+            {
+                var cmt = _mapper.Map<CommentResponse>(comment);
+                var us = user.Find(x => x.Id == comment.UserId);
+                var p = posts.Find(x => x.Id == comment.PostId);
+                cmt.PostLink = p.Link;
+                if (!string.IsNullOrEmpty(comment.UserId.ToString()))
+                {
+                    cmt.Username = us.Username;
+                    cmt.Avatar = us.Avatar;
+                    cmt.Name = us.Name;
+                }
+                else
+                {
+                    cmt.Avatar = "/imgs/authors/default-avatar.png";
+                }
+                commentR.Add(cmt);
+            }
+
             return new HomePageViewModel
             {
                 FeaturedPosts = await ConvertToPostResponse(await GetFeaturedPosts()),
                 MostPopularPosts = mostPopularPosts,
-                HotTags = ht
+                HotTags = ht,
+                LastComments = commentR
             };
         }
 
