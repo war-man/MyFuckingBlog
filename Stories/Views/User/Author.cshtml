@@ -178,7 +178,9 @@
             var PAGEMAX = @Count;
             $("main").addClass("bg-grey pt-80 pb-50");
             $("footer").toggleClass("bg-grey");
-            LoadAuthorPosts(PAGENOW);
+            setTimeout(function () {
+                LoadAuthorPosts(PAGENOW);
+            }, 500);
             LoadInstagramPost();
 
             $(".page-link").click(function () {

@@ -314,10 +314,10 @@
                                             </div>
                                             <div class="post-content media-body">
                                                 <p class="mb-10">
-                                                    <a href="/Author/@cmt.Username"><strong>@cmt.Name</strong></a>
+                                                    <a href="@(!string.IsNullOrEmpty(cmt.Username) ? "/Author/" + cmt.Username : "#")"><strong>@cmt.Name</strong></a>
                                                     <span class="ml-15 font-small text-muted has-dot">@(cmt.CreatedDate.Day + " tháng " + cmt.CreatedDate.Month)</span>
                                                 </p>
-                                                <p class="text-muted font-small">@cmt.Content</p>
+                                                <p class="text-muted font-small">@(cmt.Content.Length < 60 ? cmt.Content : cmt.Content.Substring(0, Math.Min(57, cmt.Content.Length)) + "...")</p>
                                             </div>
                                         </div>
                                     </li>
