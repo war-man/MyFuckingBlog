@@ -27,5 +27,11 @@ namespace Stories.Models
         public Guid? IdReference { get; set; }
         [Column("created_date")]
         public DateTime CreatedDate { get; set; }
+
+        public Comment()
+        {
+            Id = new Guid();
+            CreatedDate = DateTime.Now;
+        }
     }
 }

@@ -28,6 +28,7 @@ namespace Stories.Services
         Task<List<PostResponse>> GetSearchResultPosts(string keyword, int pageNumber);
         Task<List<PostResponse>> GetLatestPosts(int pageNumber);
         Task<Post> CreatePost(CreatePostRequest request);
+        Task<CommentResponse> CreateComment(CreateCommentRequest request);
         Task<LayoutResponse> GetLayoutResponse();
         Task<List<Category>> GetCategories();
         Task<Category> GetCategory(string categoryId);
@@ -116,9 +117,9 @@ namespace Stories.Services
             foreach (var comment in comments)
             {
                 var cmt = _mapper.Map<CommentResponse>(comment);
-                var us = users.Find(x => x.Id == comment.UserId);
-                if (!string.IsNullOrEmpty(comment.UserId.ToString()))
+                if (comment.UserId != null && comment.UserId != Guid.Empty)
                 {
+                    var us = users.Find(x => x.Id == comment.UserId);
                     cmt.Username = us.Username;
                     cmt.Avatar = us.Avatar;
                     cmt.Name = us.Name;
@@ -172,11 +173,11 @@ namespace Stories.Services
             foreach (var comment in lastComments)
             {
                 var cmt = _mapper.Map<CommentResponse>(comment);
-                var us = user.Find(x => x.Id == comment.UserId);
                 var p = posts.Find(x => x.Id == comment.PostId);
                 cmt.PostLink = p.Link;
-                if (!string.IsNullOrEmpty(comment.UserId.ToString()))
+                if (comment.UserId != null && comment.UserId != Guid.Empty)
                 {
+                    var us = user.Find(x => x.Id == comment.UserId);
                     cmt.Username = us.Username;
                     cmt.Avatar = us.Avatar;
                     cmt.Name = us.Name;
@@ -298,6 +299,31 @@ namespace Stories.Services
             _unitOfWork.GetRepository<Post>().Add(post);
             await _unitOfWork.CommitAsync();
             return post;
+        }
+
+        public async Task<CommentResponse> CreateComment(CreateCommentRequest request)
+        {
+            var comment = new Comment();
+            comment = _mapper.Map<Comment>(request);
+
+            _unitOfWork.GetRepository<Comment>().Add(comment);
+            await _unitOfWork.CommitAsync();
+
+
+            var cmt = _mapper.Map<CommentResponse>(comment);
+            if (request.IsAuth)
+            {
+                var us = await _unitOfWork.GetRepository<User>().FindAsync(x => x.Id == comment.UserId);
+                cmt.Username = us.Username;
+                cmt.Avatar = us.Avatar;
+                cmt.Name = us.Name;
+            }
+            else
+            {
+                cmt.Avatar = "/imgs/authors/default-avatar.png";
+            }
+
+            return cmt;
         }
 
         public async Task<LayoutResponse> GetLayoutResponse()

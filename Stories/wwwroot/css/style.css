@@ -1820,6 +1820,9 @@ blockquote {
 
 		.comments-area .thumb img {
 			width: 70px;
+			height: 70px;
+			max-width: none;
+			object-fit: cover;
 			border-radius: 50%;
 		}
 

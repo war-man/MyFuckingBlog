@@ -95,7 +95,7 @@ namespace Stories.Controllers
             }
             else if (code == 500)
             {
-                message = "Server đang bị lỗi gì đấy";
+                message = "Server hoặc code bị lỗi gì đấy @@";
             }
             else
             {
@@ -162,11 +162,20 @@ namespace Stories.Controllers
             return Json(post);
         }
 
-        [HttpGet("/Comment/CreateComment")]
+        [HttpPost("/Comment/CreateComment")]
         public async Task<JsonResult> CreateComment(CreateCommentRequest request)
         {
-            //var post = await _blogService.GetSearchResultPosts(keyword, pageNumber);
-            return Json("ok");
+            var success = false;
+
+            var comment = await _blogService.CreateComment(request);
+
+            if (comment != null) success = true;
+
+            return Json(new
+            {
+                success = success,
+                comment = comment
+            });
         }
         #endregion
     }
