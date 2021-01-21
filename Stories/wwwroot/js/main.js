@@ -146,7 +146,7 @@
                 });
 
                 $("#desktop-menu").html(html);
-                $(".mobile_menu .slicknav_menu .menu-item-has-children:nth-child(2) ul").html(html2);
+                $(".mobile_menu .slicknav_menu .menu-item-has-children:nth-child(3) ul").html(html2);
                 $("#hot-topics").html(html3);
                 $("#dont-miss").html(html4);
                 $("#footer-posts").html(html5);

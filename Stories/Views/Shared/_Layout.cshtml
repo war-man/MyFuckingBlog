@@ -123,6 +123,25 @@
                         <!--Mobile menu-->
                         <ul id="mobile-menu" class="d-block d-lg-none text-muted">
                             <li class="menu-item-has-children"><a href="/">Trang chủ</a></li>
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="menu-item-has-children">
+                                    <a href="#">@User.Claims.FirstOrDefault(c => c.Type == "Name").Value</a>
+                                    <ul class="sub-menu font-small">
+                                        <li class="menu-item-has-children"><a href="/Author/@User.Claims.FirstOrDefault(c => c.Type == "Username").Value">Trang cá nhân</a></li>
+                                        @if (User.Claims.FirstOrDefault(c => c.Type == "IsAuthor").Value == "true")
+                                        {
+                                            <li class="menu-item-has-children"><a href="/CreatePost">Tạo bài viết</a></li>
+                                            <li class="menu-item-has-children"><a href="/PageSetting">Cài đặt blog</a></li>
+                                        }
+                                        <li class="menu-item-has-children"><a asp-action="LogOut" asp-controller="User" id="btnLogOut">Đăng xuất</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="menu-item-has-children"><a href="/Login">Đăng nhập</a></li>
+                            }
                             <li class="menu-item-has-children">
                                 <a href="#">Danh mục</a>
                                 <ul class="sub-menu font-small" id="ul-mobile-menu">

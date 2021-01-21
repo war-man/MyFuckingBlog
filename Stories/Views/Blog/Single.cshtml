@@ -51,7 +51,7 @@
     <article class="entry-wraper mb-50">
         <div class="entry-main-content dropcap wow fadeIn animated">
             <hr class="wp-block-separator is-style-dots">
-            <p style="white-space: pre-line">@Html.Raw(Model.Content)</p>
+            <span id="content">@Html.Raw(Model.Content)</span>
             <hr class="section-divider">
         </div>
         <div class="entry-bottom mt-50 mb-30 wow fadeIn animated">
@@ -421,4 +421,13 @@
         .comment-empty .comment {
             font-size: 18px !important;
         }
+
+    #content {
+        font-size: 1.1em;
+        line-height: 1.75;
+        margin-bottom: 1.2em;
+        margin-top: 0;
+        font-weight: 400;
+        white-space: pre-line;
+    }
 </style>

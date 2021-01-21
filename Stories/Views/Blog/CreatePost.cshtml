@@ -48,7 +48,7 @@
                 <option value="">Không</option>
                 <option value="star">Star</option>
                 <option value="camera">Ảnh chụp</option>
-                <option value="image">Image</option>
+                <option value="image">Hình ảnh</option>
                 <option value="headphones">Âm nhạc</option>
                 <option value="heart">Heart</option>
             </select>
@@ -205,51 +205,44 @@
 
             $("#addImageModal").click(function () {
                 var imageCaption = $("#image-caption").val();
-                if (imageCaption.length < 5) {
+
+                if ($('#modal_cloudinary-fileupload').get(0).files.length === 0) {
                     iziToast.warning({
                         title: 'Caution',
-                        message: 'Vui lòng nhập caption ảnh!',
+                        message: 'Vui lòng chọn file ảnh!',
                     });
-                }
-                else {
+                } else {
+                    var formData = new FormData(document.getElementById("modal_upload_form"));
 
-                    if ($('#modal_cloudinary-fileupload').get(0).files.length === 0) {
-                        iziToast.warning({
-                            title: 'Caution',
-                            message: 'Vui lòng chọn file ảnh!',
-                        });
-                    } else {
-                        var formData = new FormData(document.getElementById("modal_upload_form"));
-
-                        $.ajax({
-                            url: "https://api.cloudinary.com/v1_1/" + cloudName + "/image/upload?api_key=" + apiKey + "&upload_preset=" + uploadPreset,
-                            method: 'POST',
-                            data: formData,
-                            cache: false,
-                            contentType: false,
-                            processData: false,
-                            success: function (data) {
-                                iziToast.success({
-                                    title: 'Upload ảnh thành công',
-                                    message: 'Đường dẫn: ' + data.secure_url,
-                                });
-                                $("#modal_cloudinary-fileupload").val("");
-                                $("#uploadModal").modal("hide");
-                                var content = $("#content").val();
-                                $("#content").val(content + "\n\n" + '<figure class="image mb-30 m-auto text-center border-radius-10">'
-                                    + '<img class="border-radius-10" src="' + data.secure_url + '" alt="post-title">'
-                                    + '<figcaption>' + imageCaption + '</figcaption></figure>');
-                                uploadedImage = '';
-                                $("#content").focus();
-                            },
-                            error: function (data) {
-                                iziToast.error({
-                                    title: 'Upload ảnh không thành công',
-                                    message: 'Lỗi: ' + data.responseJSON.error.message,
-                                });
-                            }
-                        });
-                    }
+                    $.ajax({
+                        url: "https://api.cloudinary.com/v1_1/" + cloudName + "/image/upload?api_key=" + apiKey + "&upload_preset=" + uploadPreset,
+                        method: 'POST',
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            iziToast.success({
+                                title: 'Upload ảnh thành công',
+                                message: 'Đường dẫn: ' + data.secure_url,
+                            });
+                            $("#modal_cloudinary-fileupload").val("");
+                            $("#uploadModal").modal("hide");
+                            $("#image-caption").val("");
+                            var content = $("#content").val();
+                            $("#content").val(content + "\n\n" + '<figure class="image m-auto text-center border-radius-10">'
+                                + '<img class="border-radius-10" src="' + data.secure_url + '" alt="post-title">'
+                                + (imageCaption ? ('<figcaption>' + imageCaption + '</figcaption>') : '') + '</figure>');
+                            uploadedImage = '';
+                            $("#content").focus();
+                        },
+                        error: function (data) {
+                            iziToast.error({
+                                title: 'Upload ảnh không thành công',
+                                message: 'Lỗi: ' + data.responseJSON.error.message,
+                            });
+                        }
+                    });
                 }
             });
 
