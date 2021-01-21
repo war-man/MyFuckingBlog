@@ -152,6 +152,9 @@
         }
 
         function RenderHTML(post) {
+            var link = '@Configuration["AppSetting:HostURL"]/Blog/Single/' + post.link;
+            var ev = "'width=500,height=500,top=300px,left=300px'";
+
             var html = '<article class="col-lg-4 col-md-6 mb-30 wow fadeInUp animated" data-wow-delay="0.2s">'
                 +       '<div class="post-card-1 border-radius-10 hover-up">'
                 +           '<div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(' + post.imageLink + ')">'
@@ -165,9 +168,9 @@
 
            html +=               '<ul class="social-share">'
                 +                   '<li><a href="#"><i class="elegant-icon social_share"></i></a></li>'
-                +                   '<li><a class="fb" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/' + post.link + '" title="Chia sẻ lên Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>'
-                +                   '<li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>'
-                +                   '<li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>'
+                +                   '<li><a class="fb" href="//www.facebook.com/sharer/sharer.php?u=https://' + link + '" title="Chia sẻ lên Facebook" target="_blank" onclick="window.open(this.href,this.title,' + ev + '); return false;"><i class="elegant-icon social_facebook"></i></a></li>'
+                +                   '<li><a class="tw" href="//twitter.com/share?url=https://' + link + '" target="_blank" title="Tweet now" onclick="window.open(this.href,this.title,' + ev + '); return false;"><i class="elegant-icon social_twitter"></i></a></li>'
+                +                   '<li><a class="pt" href="//pinterest.com/pin/create/button/?url=' + link + '" target="_blank" title="Pin it" onclick="window.open(this.href,this.title,' + ev + '); return false;"><i class="elegant-icon social_pinterest"></i></a></li>'
                 +               '</ul>'
                 +           '</div>'
                 +           '<div class="post-content p-30">'

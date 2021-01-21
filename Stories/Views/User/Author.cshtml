@@ -196,6 +196,9 @@
                     $(data).each(function (index, post) {
                         if (PAGENOW == 1) {
                             if (index < 2) {
+                                var link = '@Configuration["AppSetting:HostURL"]/Blog/Single/' + post.link;
+                                var ev = "'width=500,height=500,top=300px,left=300px'";
+
                                 head += '<article class="col-md-6 mb-40 wow fadeInUp animated">'
                                     + '<div class="post-card-1 border-radius-10 hover-up">'
                                     + '<div class="post-thumb thumb-overlay img-hover-slide position-relative" style="background-image: url(' + post.imageLink + ')">'
@@ -209,9 +212,9 @@
 
                                 head += '<ul class="social-share">'
                                     + '<li><a href="#"><i class="elegant-icon social_share"></i></a></li>'
-                                    + '<li><a class="fb" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/' + post.link + '" title="Chia sẻ lên Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>'
-                                    + '<li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>'
-                                    + '<li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>'
+                                    + '<li><a class="fb" href="//www.facebook.com/sharer/sharer.php?u=https://' + link + '" title="Chia sẻ lên Facebook" target="_blank" onclick="window.open(this.href,this.title,' + ev + '); return false;"><i class="elegant-icon social_facebook"></i></a></li>'
+                                    + '<li><a class="tw" href="//twitter.com/share?url=https://' + link + '" target="_blank" title="Tweet now" onclick="window.open(this.href,this.title,' + ev + '); return false;"><i class="elegant-icon social_twitter"></i></a></li>'
+                                    + '<li><a class="pt" href="//pinterest.com/pin/create/button/?url=' + link + '" target="_blank" title="Pin it" onclick="window.open(this.href,this.title,' + ev + '); return false;"><i class="elegant-icon social_pinterest"></i></a></li>'
                                     + '</ul>'
                                     + '</div>'
                                     + '<div class="post-content p-30">'
@@ -256,6 +259,9 @@
         }
 
         function RenderHtml(post) {
+            var link = '@Configuration["AppSetting:HostURL"]/Blog/Single/' + post.link;
+            var ev = "'width=500,height=500,top=300px,left=300px'";
+
             return '<article class="hover-up-2 transition-normal wow fadeInUp animated">'
                 + '<div class="row mb-40 list-style-2">'
                 + '<div class="col-md-4">'
@@ -265,9 +271,9 @@
                 + '</div>'
                 + '<ul class="social-share">'
                 + '<li><a href="#"><i class="elegant-icon social_share"></i></a></li>'
-                + '<li><a class="fb" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/' + post.link + '" title="Chia sẻ lên Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>'
-                + '<li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>'
-                + '<li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>'
+                + '<li><a class="fb" href="//www.facebook.com/sharer/sharer.php?u=https://' + link + '" title="Chia sẻ lên Facebook" target="_blank" onclick="window.open(this.href,this.title,' + ev + '); return false;"><i class="elegant-icon social_facebook"></i></a></li>'
+                + '<li><a class="tw" href="//twitter.com/share?url=https://' + link + '" target="_blank" title="Tweet now" onclick="window.open(this.href,this.title,' + ev + '); return false;"><i class="elegant-icon social_twitter"></i></a></li>'
+                + '<li><a class="pt" href="//pinterest.com/pin/create/button/?url=' + link + '" target="_blank" title="Pin it" onclick="window.open(this.href,this.title,' + ev + '); return false;"><i class="elegant-icon social_pinterest"></i></a></li>'
                 + '</ul>'
                 + '</div>'
                 + '</div>'

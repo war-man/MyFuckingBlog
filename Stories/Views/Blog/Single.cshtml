@@ -36,9 +36,9 @@
             <div class="col-md-6 text-right d-none d-md-inline">
                 <ul class="header-social-network d-inline-block list-inline mr-15">
                     <li class="list-inline-item text-muted"><span>Chia sẻ bài viết: </span></li>
-                    <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link"><i class="elegant-icon social_facebook"></i></a></li>
-                    <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="#"><i class="elegant-icon social_twitter "></i></a></li>
-                    <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
+                    <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="//www.facebook.com/sharer/sharer.php?u=https://@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_facebook"></i></a></li>
+                    <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="//twitter.com/share?url=https://@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_twitter "></i></a></li>
+                    <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="//pinterest.com/pin/create/button/?url=@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_pinterest "></i></a></li>
                 </ul>
             </div>
         </div>
@@ -59,7 +59,7 @@
                 <span>Tags: </span>
                 @foreach (var tag in Model.Tag.Split(" "))
                 {
-                    <a href="/Search" rel="tag">@tag</a>
+                <a href="/Search" rel="tag">@tag</a>
                 }
             </div>
         </div>
@@ -71,9 +71,9 @@
             </div>
             <ul class="header-social-network d-inline-block list-inline float-md-right mt-md-0 mt-4">
                 <li class="list-inline-item text-muted"><span>Chia sẻ bài viết: </span></li>
-                <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link"><i class="elegant-icon social_facebook"></i></a></li>
-                <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="#"><i class="elegant-icon social_twitter "></i></a></li>
-                <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
+                <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="//www.facebook.com/sharer/sharer.php?u=https://@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_facebook"></i></a></li>
+                <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="//twitter.com/share?url=https://@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_twitter "></i></a></li>
+                <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="//pinterest.com/pin/create/button/?url=@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_pinterest "></i></a></li>
             </ul>
         </div>
         <!--author box-->
@@ -107,6 +107,8 @@
                 <div class="loop-list loop-list-style-1">
                     @foreach (var post in Model.RelatedPosts)
                     {
+                        var link = Configuration["AppSetting:HostURL"] + "/Blog/Single/" + post.Link;
+
                         <article class="hover-up-2 transition-normal wow fadeInUp animated">
                             <div class="row mb-40 list-style-2">
                                 <div class="col-md-4">
@@ -116,9 +118,9 @@
                                         </div>
                                         <ul class="social-share">
                                             <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
-                                            <li><a class="fb" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/@post.Link" title="Chia sẻ lên Facebook" target="_blank"><i class="elegant-icon social_facebook"></i></a></li>
-                                            <li><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
-                                            <li><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>
+                                            <li><a class="fb" href="//www.facebook.com/sharer/sharer.php?u=https://@link" title="Chia sẻ lên Facebook" target="_blank" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_facebook"></i></a></li>
+                                            <li><a class="tw" href="//twitter.com/share?url=https://@link" target="_blank" title="Tweet now" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_twitter"></i></a></li>
+                                            <li><a class="pt" href="//pinterest.com/pin/create/button/?url=@link" target="_blank" title="Pin it" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_pinterest"></i></a></li>
                                         </ul>
                                     </div>
                                 </div>
@@ -181,42 +183,42 @@
             @{
                 if (Model.Comments.Count == 0)
                 {
-                    <div class="comment-list wow fadeIn animated comment-empty">
-                        <p class="comment">
-                            Chưa có bình luận nào!
-                        </p>
-                    </div>
+                <div class="comment-list wow fadeIn animated comment-empty">
+                    <p class="comment">
+                        Chưa có bình luận nào!
+                    </p>
+                </div>
                 }
                 else
                 {
                     foreach (var cmt in Model.Comments)
                     {
                         DateTime cd = cmt.CreatedDate;
-                        <div class="comment-list wow fadeIn animated">
-                            <div class="single-comment justify-content-between d-flex">
-                                <div class="user justify-content-between d-flex">
-                                    <div class="thumb">
-                                        <img src="@cmt.Avatar" alt="">
+                <div class="comment-list wow fadeIn animated">
+                    <div class="single-comment justify-content-between d-flex">
+                        <div class="user justify-content-between d-flex">
+                            <div class="thumb">
+                                <img src="@cmt.Avatar" alt="">
+                            </div>
+                            <div class="desc">
+                                <p class="comment">
+                                    @cmt.Content
+                                </p>
+                                <div class="d-flex justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <h5>
+                                            <a href="@(!string.IsNullOrEmpty(cmt.Username) ? "/Author/" + cmt.Username : "#")">@cmt.Name</a>
+                                        </h5>
+                                        <p class="date">@(cd.Day + " tháng " + monthString[cd.Month - 1] + ", " + cd.Year + " lúc " + (cd.Hour - 7) + ":" + cd.Minute)</p>
                                     </div>
-                                    <div class="desc">
-                                        <p class="comment">
-                                            @cmt.Content
-                                        </p>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="d-flex align-items-center">
-                                                <h5>
-                                                    <a href="@(!string.IsNullOrEmpty(cmt.Username) ? "/Author/" + cmt.Username : "#")">@cmt.Name</a>
-                                                </h5>
-                                                <p class="date">@(cd.Day + " tháng " + monthString[cd.Month - 1] + ", " + cd.Year + " lúc " + (cd.Hour - 7) + ":" + cd.Minute)</p>
-                                            </div>
-                                            <div class="reply-btn">
-                                                <a href="#" class="btn-reply">Trả lời</a>
-                                            </div>
-                                        </div>
+                                    <div class="reply-btn">
+                                        <a href="#" class="btn-reply">Trả lời</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
                     }
                 }
             }
@@ -236,21 +238,21 @@
                 @{
                     if (!User.Identity.IsAuthenticated)
                     {
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input class="form-control" name="name" id="name" type="text" placeholder="Tên">
-                            </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control" name="name" id="name" type="text" placeholder="Tên">
                         </div>
-                        <div class="col-sm-6">
-                            <div class="form-group">
-                                <input class="form-control" name="email" id="email" type="email" placeholder="Email">
-                            </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <input class="form-control" name="email" id="email" type="email" placeholder="Email">
                         </div>
-                        <div class="col-12">
-                            <div class="form-group">
-                                <input class="form-control" name="website" id="website" type="text" placeholder="Website (Tùy chọn)">
-                            </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="form-group">
+                            <input class="form-control" name="website" id="website" type="text" placeholder="Website (Tùy chọn)">
                         </div>
+                    </div>
                     }
                 }
             </div>
