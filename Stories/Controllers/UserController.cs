@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Stories.Services;
+using Stories.VM;
 using Stories.VM.Request;
 using System;
 using System.Collections.Generic;
@@ -93,10 +94,14 @@ namespace Stories.Controllers
         [Route("/Author/{username}")]
         public async Task<IActionResult> Author(string username)
         {
-            var model = await _userService.GetUserInfo(username);
+            var model = new AuthorViewModel
+            {
+                User = await _userService.GetUserInfo(username),
+                Count = await _blogService.CountPost(1, username),
+                MostPopularPosts = await _blogService.GetMostPopularPosts(),
+                LastComments = await _blogService.GetLastComments()
+            };
 
-            ViewBag.Count = await _blogService.CountPost(1, username);
-            ViewBag.MostPopularPost = await _blogService.GetMostPopularPosts();
             return View(model);
         }
 

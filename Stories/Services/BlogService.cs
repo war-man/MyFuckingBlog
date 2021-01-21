@@ -27,6 +27,7 @@ namespace Stories.Services
         Task<SearchResultViewModel> GetSearchResultPosts(string keyword, string tag, int year, int take);
         Task<List<PostResponse>> GetSearchResultPosts(string keyword, int pageNumber);
         Task<List<PostResponse>> GetLatestPosts(int pageNumber);
+        Task<List<CommentResponse>> GetLastComments();
         Task<Post> CreatePost(CreatePostRequest request);
         Task<CommentResponse> CreateComment(CreateCommentRequest request);
         Task<LayoutResponse> GetLayoutResponse();
@@ -385,6 +386,34 @@ namespace Stories.Services
                 FooterPosts = footerPosts,
                 TagCloud = tl
             };
+        }
+
+        public async Task<List<CommentResponse>> GetLastComments()
+        {
+            // get Last Comments
+            var commentR = new List<CommentResponse>();
+            var posts = await _unitOfWork.GetRepository<Post>().GetAll().ToListAsync();
+            var user = await _unitOfWork.GetRepository<User>().GetAll().ToListAsync();
+            var lastComments = await _unitOfWork.GetRepository<Comment>().GetAll().OrderByDescending(x => x.CreatedDate).Take(4).ToListAsync();
+            foreach (var comment in lastComments)
+            {
+                var cmt = _mapper.Map<CommentResponse>(comment);
+                var p = posts.Find(x => x.Id == comment.PostId);
+                cmt.PostLink = p.Link;
+                if (comment.UserId != null && comment.UserId != Guid.Empty)
+                {
+                    var us = user.Find(x => x.Id == comment.UserId);
+                    cmt.Username = us.Username;
+                    cmt.Avatar = us.Avatar;
+                    cmt.Name = us.Name;
+                }
+                else
+                {
+                    cmt.Avatar = "/imgs/authors/default-avatar.png";
+                }
+                commentR.Add(cmt);
+            }
+            return commentR;
         }
 
         public async Task<List<Category>> GetCategories()
