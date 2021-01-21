@@ -417,7 +417,7 @@ namespace Stories.Services
         private int CalculateReadMinutes(string content)
         {
             int length = content.Length;
-            return length / 4 / 225;
+            return length / 4 / 175;
         }
 
         private async Task<string> GenerateLinkAsync(string Title)

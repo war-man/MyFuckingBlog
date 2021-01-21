@@ -17,7 +17,8 @@
 
         <div class="form-group">
             <label for="exampleFormControlFile1">Nội dung</label>
-            <textarea id="content" class="form-control" placeholder="Nội dung" rows="5"></textarea>
+            <button type="button" class="btn btn-primary" style="float: right;margin-bottom: 9px;" data-toggle="modal" data-target="#uploadModal" disabled id="btnTriggerAddImage">Thêm ảnh</button>
+            <textarea id="content" class="form-control" placeholder="Nội dung" rows="8"></textarea>
         </div>
 
         <div class="form-group">
@@ -63,11 +64,46 @@
     <div class="col-3"></div>
 </div>
 
-<div class="modal"></div>
+<div class="modal" id="loadingModal"></div>
+
+<!-- Modal -->
+<div class="modal fade" id="uploadModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm ảnh vào bài viết</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="exampleFormControlFile1">Ảnh</label>
+                    <div style="height:46px">
+                        <form id="modal_upload_form" enctype="multipart/form-data" style="display:inline;float:left">
+                            <input name="file" type="file" id="modal_cloudinary-fileupload" accept="image/x-png,image/gif,image/jpeg" style="margin-top:6px" />
+                        </form>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlFile1">Caption</label>
+                    <input type="text" id="image-caption" class="form-control" placeholder="Caption ảnh" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-primary" id="addImageModal">Thêm ảnh</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     <script>
-        $("#content").val("<p></p>");
+        var cloudName = '@Configuration["AppSetting:CloudName"]';
+        var apiKey = '@Configuration["AppSetting:APIKey"]';
+        var uploadPreset = '@Configuration["AppSetting:UploadPreset"]';
+        //$("#content").val("<p></p>");
         //var editor = CodeMirror.fromTextArea(document.getElementById('content'), {
         //    lineNumbers: true,
         //    mode: "htmlmixed",
@@ -81,38 +117,41 @@
             LoadCategories();
 
             $("#upload").click(function () {
-                var cloudName = '@Configuration["AppSetting:CloudName"]';
-                var apiKey = '@Configuration["AppSetting:APIKey"]';
-                var uploadPreset = '@Configuration["AppSetting:UploadPreset"]';
-
                 var formData = new FormData(document.getElementById("upload_form"));
 
-                $.ajax({
-                    url: "https://api.cloudinary.com/v1_1/" + cloudName + "/image/upload?api_key=" + apiKey + "&upload_preset=" + uploadPreset,
-                    method: 'POST',
-                    data: formData,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (data) {
-                        iziToast.success({
-                            title: 'Upload ảnh thành công',
-                            message: 'Đường dẫn: ' + data.secure_url,
-                        });
+                if ($('#cloudinary-fileupload').get(0).files.length === 0) {
+                    iziToast.warning({
+                        title: 'Caution',
+                        message: 'Vui lòng chọn file ảnh!',
+                    });
+                } else {
+                    $.ajax({
+                        url: "https://api.cloudinary.com/v1_1/" + cloudName + "/image/upload?api_key=" + apiKey + "&upload_preset=" + uploadPreset,
+                        method: 'POST',
+                        data: formData,
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            iziToast.success({
+                                title: 'Upload ảnh thành công',
+                                message: 'Đường dẫn: ' + data.secure_url,
+                            });
 
-                        $("#cloudinary-fileupload").val(""); 
-                        $("#cloudinary-fileupload").attr("disabled", true);
-                        $("#upload").attr("disabled", true);
-                        $("#image-link").val(data.secure_url);
-                        $("#image-link").attr("disabled", true);
-                    },
-                    error: function (data) {
-                        iziToast.error({
-                            title: 'Upload ảnh không thành công',
-                            message: 'Lỗi: ' + data.responseJSON.error.message,
-                        });
-                    }
-                });
+                            $("#cloudinary-fileupload").val("");
+                            $("#cloudinary-fileupload").attr("disabled", true);
+                            $("#upload").attr("disabled", true);
+                            $("#image-link").val(data.secure_url);
+                            $("#image-link").attr("disabled", true);
+                        },
+                        error: function (data) {
+                            iziToast.error({
+                                title: 'Upload ảnh không thành công',
+                                message: 'Lỗi: ' + data.responseJSON.error.message,
+                            });
+                        }
+                    });
+                }
             });
 
             $("#createPost").click(function () {
@@ -163,6 +202,64 @@
                     return false;
                 }
             });
+
+            $("#addImageModal").click(function () {
+                var imageCaption = $("#image-caption").val();
+                if (imageCaption.length < 5) {
+                    iziToast.warning({
+                        title: 'Caution',
+                        message: 'Vui lòng nhập caption ảnh!',
+                    });
+                }
+                else {
+
+                    if ($('#modal_cloudinary-fileupload').get(0).files.length === 0) {
+                        iziToast.warning({
+                            title: 'Caution',
+                            message: 'Vui lòng chọn file ảnh!',
+                        });
+                    } else {
+                        var formData = new FormData(document.getElementById("modal_upload_form"));
+
+                        $.ajax({
+                            url: "https://api.cloudinary.com/v1_1/" + cloudName + "/image/upload?api_key=" + apiKey + "&upload_preset=" + uploadPreset,
+                            method: 'POST',
+                            data: formData,
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            success: function (data) {
+                                iziToast.success({
+                                    title: 'Upload ảnh thành công',
+                                    message: 'Đường dẫn: ' + data.secure_url,
+                                });
+                                $("#modal_cloudinary-fileupload").val("");
+                                $("#uploadModal").modal("hide");
+                                var content = $("#content").val();
+                                $("#content").val(content + "\n\n" + '<figure class="image mb-30 m-auto text-center border-radius-10">'
+                                    + '<img class="border-radius-10" src="' + data.secure_url + '" alt="post-title">'
+                                    + '<figcaption>' + imageCaption + '</figcaption></figure>');
+                                uploadedImage = '';
+                                $("#content").focus();
+                            },
+                            error: function (data) {
+                                iziToast.error({
+                                    title: 'Upload ảnh không thành công',
+                                    message: 'Lỗi: ' + data.responseJSON.error.message,
+                                });
+                            }
+                        });
+                    }
+                }
+            });
+
+            $("#content").on('change keyup paste', function () {
+                if ($(this).val().trim().length > 50) {
+                    $("#btnTriggerAddImage").removeAttr("disabled");
+                } else {
+                    $("#btnTriggerAddImage").attr("disabled", true);
+                }
+            });
         });
 
         window.addEventListener('beforeunload', function (e) {
@@ -174,10 +271,10 @@
 
         $(document)
             .ajaxStart(function () {
-                $('.modal').show();
+                $('#loadingModal').show();
             })
             .ajaxStop(function () {
-                $('.modal').hide();
+                $('#loadingModal').hide();
             });
 
         function LoadCategories() {

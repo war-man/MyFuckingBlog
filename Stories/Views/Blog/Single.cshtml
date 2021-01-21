@@ -65,13 +65,13 @@
         </div>
         <div class="single-social-share clearfix wow fadeIn animated">
             <div class="entry-meta meta-1 font-small color-grey float-left mt-10">
-                <span class="hit-count mr-15"><i class="elegant-icon icon_comment_alt mr-5"></i>@Model.Comments.Count bình luận</span>
+                <span class="hit-count mr-15" id="comment-count"><i class="elegant-icon icon_comment_alt mr-5"></i>@Model.Comments.Count bình luận</span>
                 <span class="hit-count mr-15"><i class="elegant-icon icon_like mr-5"></i>268 lượt thích</span>
                 <span class="hit-count"><i class="elegant-icon icon_star-half_alt mr-5"></i>Đánh giá: 9/10</span>
             </div>
             <ul class="header-social-network d-inline-block list-inline float-md-right mt-md-0 mt-4">
                 <li class="list-inline-item text-muted"><span>Chia sẻ bài viết: </span></li>
-                <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="#"><i class="elegant-icon social_facebook"></i></a></li>
+                <li class="list-inline-item"><a class="social-icon fb text-xs-center" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=@Configuration["AppSetting:HostURL"]/Blog/Single/@Model.Link"><i class="elegant-icon social_facebook"></i></a></li>
                 <li class="list-inline-item"><a class="social-icon tw text-xs-center" target="_blank" href="#"><i class="elegant-icon social_twitter "></i></a></li>
                 <li class="list-inline-item"><a class="social-icon pt text-xs-center" target="_blank" href="#"><i class="elegant-icon social_pinterest "></i></a></li>
             </ul>
@@ -330,6 +330,9 @@
                             request: request
                         },
                         success: function (data) {
+                            var cmtCount = parseInt($("#comment-count").text().split(" bình luận")[0]);
+                            var i = '<i class="elegant-icon icon_comment_alt mr-5"></i>';
+
                             iziToast.success({
                                 title: '',
                                 message: 'Gửi bình luận thành công!',
@@ -367,8 +370,16 @@
                                 + '</div>'
                                 + '</div>');
 
+                            $("#comment-count").html(i + (cmtCount + 1) + " bình luận");
+
                             $("input").val("");
                             $("textarea").val("");
+                        },
+                        beforeSend: function () {
+                            $(".preloader").show();
+                        },
+                        complete: function () {
+                            $(".preloader").hide();
                         }
                     });
                 }

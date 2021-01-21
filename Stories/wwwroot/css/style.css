@@ -1698,6 +1698,7 @@ blockquote {
 		border-radius: 50%;
 		width: 90px;
 		height: 90px;
+		object-fit: cover;
 	}
 
 	.author-bio .author-image {
@@ -2114,7 +2115,8 @@ textarea.form-control {
 		caption-side: bottom;
 	}
 
-.wp-block-image figcaption {
+.wp-block-image figcaption,
+figure.image figcaption {
 	color: #6a6a6a;
 	z-index: 1;
 	bottom: 0;
