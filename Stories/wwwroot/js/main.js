@@ -303,6 +303,8 @@
 
         // featured slider 2
         $('.featured-slider-2-items').slick({
+            autoplay: true,
+            autoplaySpeed: 3000,
             slidesToShow: 1,
             slidesToScroll: 1,
             arrows: false,
