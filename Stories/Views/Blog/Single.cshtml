@@ -59,7 +59,7 @@
                 <span>Tags: </span>
                 @foreach (var tag in Model.Tag.Split(" "))
                 {
-                <a href="/Search" rel="tag">@tag</a>
+                <a href="/Blog/Tag/@tag" rel="tag">@tag</a>
                 }
             </div>
         </div>

@@ -11,6 +11,7 @@ namespace Stories.VM
     {
         public List<PostResponse> FeaturedPosts { get; set; }
         public List<Post> MostPopularPosts { get; set; }
+        public List<PostResponse> RandomCategoryPosts { get; set; }
         public List<string> HotTags { get; set; }
         public List<CommentResponse> LastComments { get; set; }
     }

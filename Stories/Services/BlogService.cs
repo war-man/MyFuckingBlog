@@ -150,8 +150,17 @@ namespace Stories.Services
 
         public async Task<HomePageViewModel> GetHomePagePosts(int year, int take)
         {
-            //var randomCategoryPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CategoryId == "").OrderByDescending(x => x.CreatedDate).ToListAsync();
+            // get Random Category Posts 
+            var cat = await _unitOfWork.GetRepository<Category>().GetAll().ToListAsync();
+            var randomCategoryPosts = new List<Post>();
+            while (randomCategoryPosts.Count < 4)
+            {
+                var randCat = cat.OrderBy(r => Guid.NewGuid()).Take(1).First();
+                randomCategoryPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CategoryId == randCat.Id).OrderByDescending(x => x.CreatedDate).ToListAsync();
+            }
+            randomCategoryPosts = randomCategoryPosts.Skip(0).Take(4).ToList();
 
+            // get Most Popular Posts
             var mostPopularPosts = await _unitOfWork.GetRepository<Post>().GetAll().Where(x => x.CreatedDate.Year == year).OrderByDescending(x => x.Views).Take(take).ToListAsync();
 
             // get Hot tags
@@ -194,6 +203,7 @@ namespace Stories.Services
             {
                 FeaturedPosts = await ConvertToPostResponse(await GetFeaturedPosts()),
                 MostPopularPosts = mostPopularPosts,
+                RandomCategoryPosts = await ConvertToPostResponse(randomCategoryPosts),
                 HotTags = ht,
                 LastComments = commentR
             };
