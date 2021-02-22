@@ -35,7 +35,7 @@
                                     <label class="form-check-label" for="chkSavePassword"><span>Ghi nhớ</span></label>
                                 </div>
                             </div>
-                            <a class="text-muted" href="#">Quên mật khẩu?</a>
+                            <a class="text-muted" href="#" id="forget-password">Quên mật khẩu?</a>
                         </div>
                         <div class="form-group">
                             <button type="submit" class="button button-contactForm btn-block">Đăng nhập</button>
@@ -56,6 +56,8 @@
     </div>
 </div>
 @section Scripts {
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/css/iziToast.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/izitoast/1.4.0/js/iziToast.min.js"></script>
     <script>
         $(document).ready(function () {
             $("main").addClass("bg-grey pt-80 pb-50");
@@ -79,6 +81,19 @@
 
             $(".btn-google").click(function () {
                 $(".abcRioButton").trigger('click');
+            });
+
+            $("#forget-password").click(function () {
+                iziToast.warning({
+                    title: '',
+                    message: 'Quên mật khẩu thì nhịn đăng nhập!',
+                    onClosed: function () {
+                        iziToast.success({
+                            title: '',
+                            message: 'Hoặc nhắn tin cho mình tại facebook Lê Võ Thành Tâm :))))'
+                        });
+                    },
+                });
             });
         });
 
