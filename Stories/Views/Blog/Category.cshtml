@@ -143,10 +143,11 @@
                     else {
                         $("#category-post").find(".col-lg-8.mb-30").hide();
                     }
-
-                    $("#category-post").append(html);
-                    $(".page-item").removeClass("active");
-                    $(".page-link:contains(" + PAGENOW + ")").parent().addClass("active");
+                    setTimeout(function () {
+                        $("#category-post").append(html);
+                        $(".page-item").removeClass("active");
+                        $(".page-link:contains(" + PAGENOW + ")").parent().addClass("active");
+                    }, 500);
                 }
             });
         }

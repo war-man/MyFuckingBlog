@@ -27,6 +27,14 @@ namespace Stories.Models
         public bool IsAuthor { get; set; }
         [Column("created_date")]
         public DateTime CreatedDate { get; set; }
+        [Column("facebook")]
+        public string Facebook { get; set; }
+        [Column("twitter")]
+        public string Twitter { get; set; }
+        [Column("instagram")]
+        public string Instagram { get; set; }
+        [Column("pinterest")]
+        public string Pinterest { get; set; }
 
         public User()
         {

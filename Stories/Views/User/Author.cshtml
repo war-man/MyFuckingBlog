@@ -25,12 +25,28 @@
                     <div class="author-description text-muted">
                         @User.Description
                     </div>
-                    <strong class="text-muted">Theo dõi: </strong>
-                    <ul class="header-social-network d-inline-block list-inline color-white mb-20">
-                        <li class="list-inline-item"><a class="fb" href="#" target="_blank" title="Facebook"><i class="elegant-icon social_facebook"></i></a></li>
-                        <li class="list-inline-item"><a class="tw" href="#" target="_blank" title="Tweet now"><i class="elegant-icon social_twitter"></i></a></li>
-                        <li class="list-inline-item"><a class="pt" href="#" target="_blank" title="Pin it"><i class="elegant-icon social_pinterest"></i></a></li>
-                    </ul>
+                    @if (!string.IsNullOrEmpty(User.Facebook) && !string.IsNullOrEmpty(User.Twitter) && !string.IsNullOrEmpty(User.Pinterest) && !string.IsNullOrEmpty(User.Instagram))
+                    {
+                        <strong class="text-muted">Theo dõi: </strong>
+                        <ul class="header-social-network d-inline-block list-inline color-white mb-20">
+                            @if (!string.IsNullOrEmpty(User.Facebook))
+                            {
+                                <li class="list-inline-item"><a class="fb" href="@User.Facebook" target="_blank" title="Facebook"><i class="elegant-icon social_facebook"></i></a></li>
+                            }
+                            @if (!string.IsNullOrEmpty(User.Instagram))
+                            {
+                                <li class="list-inline-item"><a class="is" href="@User.Instagram" target="_blank" title="Instagram"><i class="elegant-icon social_instagram"></i></a></li>
+                            }
+                            @if (!string.IsNullOrEmpty(User.Twitter))
+                            {
+                                <li class="list-inline-item"><a class="tw" href="@User.Twitter" target="_blank" title="Twitter"><i class="elegant-icon social_twitter"></i></a></li>
+                            }
+                            @if (!string.IsNullOrEmpty(User.Pinterest))
+                            {
+                                <li class="list-inline-item"><a class="pt" href="@User.Pinterest" target="_blank" title="Pinterest"><i class="elegant-icon social_pinterest"></i></a></li>
+                            }
+                        </ul>
+                    }
                 </div>
             </div>
         </div>
