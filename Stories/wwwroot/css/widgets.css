@@ -213,6 +213,10 @@
     padding: 0 25px;
 }
 
+    .form-subcriber .btn.disabled:hover {
+        background-color: var(--color-primary) !important;
+    }
+
 input.form-control::placeholder {
     color: #9b9b9b
 }
