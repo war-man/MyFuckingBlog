@@ -1834,6 +1834,7 @@ blockquote {
 		margin-left: 20px;
 	}
 
+	.loop-list.loop-list-style-1.comment-empty .comment,
 	.comments-area .comment {
 		margin-bottom: 10px;
 		color: #777777;

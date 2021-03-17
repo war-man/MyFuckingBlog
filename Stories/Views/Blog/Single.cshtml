@@ -104,46 +104,58 @@
                 <div class="widget-header-2 position-relative mb-30">
                     <h5 class="mt-5 mb-30">Bài viết liên quan</h5>
                 </div>
-                <div class="loop-list loop-list-style-1">
-                    @foreach (var post in Model.RelatedPosts)
-                    {
-                        var link = Configuration["AppSetting:HostURL"] + "/Blog/Single/" + post.Link;
 
-                        <article class="hover-up-2 transition-normal wow fadeInUp animated">
-                            <div class="row mb-40 list-style-2">
-                                <div class="col-md-4">
-                                    <div class="post-thumb position-relative border-radius-5">
-                                        <div class="img-hover-slide border-radius-5 position-relative" style="background-image: url(@post.ImageLink)">
-                                            <a class="img-link" href="/Blog/Single/@post.Link"></a>
+                @if (Model.RelatedPosts.Count == 0)
+                {
+                    <div class="loop-list loop-list-style-1 comment-empty">
+                        <p class="comment">
+                            Không có bài viết liên quan!
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <div class="loop-list loop-list-style-1">
+                        @foreach (var post in Model.RelatedPosts)
+                        {
+                            var link = Configuration["AppSetting:HostURL"] + "/Blog/Single/" + post.Link;
+
+                            <article class="hover-up-2 transition-normal wow fadeInUp animated">
+                                <div class="row mb-40 list-style-2">
+                                    <div class="col-md-4">
+                                        <div class="post-thumb position-relative border-radius-5">
+                                            <div class="img-hover-slide border-radius-5 position-relative" style="background-image: url(@post.ImageLink)">
+                                                <a class="img-link" href="/Blog/Single/@post.Link"></a>
+                                            </div>
+                                            <ul class="social-share">
+                                                <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
+                                                <li><a class="fb" href="//www.facebook.com/sharer/sharer.php?u=https://@link" title="Chia sẻ lên Facebook" target="_blank" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_facebook"></i></a></li>
+                                                <li><a class="tw" href="//twitter.com/share?url=https://@link" target="_blank" title="Tweet now" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_twitter"></i></a></li>
+                                                <li><a class="pt" href="//pinterest.com/pin/create/button/?url=@link" target="_blank" title="Pin it" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_pinterest"></i></a></li>
+                                            </ul>
                                         </div>
-                                        <ul class="social-share">
-                                            <li><a href="#"><i class="elegant-icon social_share"></i></a></li>
-                                            <li><a class="fb" href="//www.facebook.com/sharer/sharer.php?u=https://@link" title="Chia sẻ lên Facebook" target="_blank" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_facebook"></i></a></li>
-                                            <li><a class="tw" href="//twitter.com/share?url=https://@link" target="_blank" title="Tweet now" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_twitter"></i></a></li>
-                                            <li><a class="pt" href="//pinterest.com/pin/create/button/?url=@link" target="_blank" title="Pin it" onclick="window.open(this.href,this.title,'width=500,height=500,top=300px,left=300px'); return false;"><i class="elegant-icon social_pinterest"></i></a></li>
-                                        </ul>
+                                    </div>
+                                    <div class="col-md-8 align-self-center">
+                                        <div class="post-content">
+                                            <div class="entry-meta meta-0 font-small mb-10">
+                                                <a href="/Blog/Category/@post.CategoryId"><span class="post-cat @post.CategoryColor">@post.Category</span></a>
+                                            </div>
+                                            <h5 class="post-title font-weight-900 mb-20">
+                                                <a href="/Blog/Single/@post.Link">@post.Title</a>
+                                            </h5>
+                                            <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
+                                                <span class="post-on">@post.CreatedDate.Day tháng @monthString[post.CreatedDate.Month - 1]</span>
+                                                <span class="time-reading has-dot">@post.ReadMinute phút đọc</span>
+                                                <span class="post-by has-dot">@post.Views lượt xem</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-8 align-self-center">
-                                    <div class="post-content">
-                                        <div class="entry-meta meta-0 font-small mb-10">
-                                            <a href="/Blog/Category/@post.CategoryId"><span class="post-cat @post.CategoryColor">@post.Category</span></a>
-                                        </div>
-                                        <h5 class="post-title font-weight-900 mb-20">
-                                            <a href="/Blog/Single/@post.Link">@post.Title</a>
-                                        </h5>
-                                        <div class="entry-meta meta-1 float-left font-x-small text-uppercase">
-                                            <span class="post-on">@post.CreatedDate.Day tháng @monthString[post.CreatedDate.Month - 1]</span>
-                                            <span class="time-reading has-dot">@post.ReadMinute phút đọc</span>
-                                            <span class="post-by has-dot">@post.Views lượt xem</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </article>
-                    }
+                            </article>
+                        }
+                    </div>
+                }   
                 </div>
-            </div>
         </div>
         <!--More posts-->
         <div class="single-more-articles border-radius-5">
@@ -183,42 +195,42 @@
             @{
                 if (Model.Comments.Count == 0)
                 {
-                <div class="comment-list wow fadeIn animated comment-empty">
-                    <p class="comment">
-                        Chưa có bình luận nào!
-                    </p>
-                </div>
+                    <div class="comment-list wow fadeIn animated comment-empty">
+                        <p class="comment">
+                            Chưa có bình luận nào!
+                        </p>
+                    </div>
                 }
                 else
                 {
                     foreach (var cmt in Model.Comments)
                     {
                         DateTime cd = cmt.CreatedDate;
-                <div class="comment-list wow fadeIn animated">
-                    <div class="single-comment justify-content-between d-flex">
-                        <div class="user justify-content-between d-flex">
-                            <div class="thumb">
-                                <img src="@cmt.Avatar" alt="">
-                            </div>
-                            <div class="desc">
-                                <p class="comment">
-                                    @cmt.Content
-                                </p>
-                                <div class="d-flex justify-content-between">
-                                    <div class="d-flex align-items-center">
-                                        <h5>
-                                            <a href="@(!string.IsNullOrEmpty(cmt.Username) ? "/Author/" + cmt.Username : "#")">@cmt.Name</a>
-                                        </h5>
-                                        <p class="date">@(cd.Day + " tháng " + monthString[cd.Month - 1] + ", " + cd.Year + " lúc " + (cd.Hour - 7) + ":" + cd.Minute)</p>
+                        <div class="comment-list wow fadeIn animated">
+                            <div class="single-comment justify-content-between d-flex">
+                                <div class="user justify-content-between d-flex">
+                                    <div class="thumb">
+                                        <img src="@cmt.Avatar" alt="">
                                     </div>
-                                    <div class="reply-btn">
-                                        <a href="#" class="btn-reply">Trả lời</a>
+                                    <div class="desc">
+                                        <p class="comment">
+                                            @cmt.Content
+                                        </p>
+                                        <div class="d-flex justify-content-between">
+                                            <div class="d-flex align-items-center">
+                                                <h5>
+                                                    <a href="@(!string.IsNullOrEmpty(cmt.Username) ? "/Author/" + cmt.Username : "#")">@cmt.Name</a>
+                                                </h5>
+                                                <p class="date">@(cd.Day + " tháng " + monthString[cd.Month - 1] + ", " + cd.Year + " lúc " + (cd.Hour - 7) + ":" + cd.Minute)</p>
+                                            </div>
+                                            <div class="reply-btn">
+                                                <a href="#" class="btn-reply">Trả lời</a>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
                     }
                 }
             }
